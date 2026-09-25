@@ -22,7 +22,7 @@ export function Dashboard() {
       <section className="intro" aria-labelledby="intro-title">
         <h1 id="intro-title">All tools</h1>
         <p>
-          {tools.length} tools for images, PDFs, documents, text and code. Everything runs in your browser, and your files are never uploaded.
+          {tools.length} tools for files, text, code, money and everyday maths. Everything runs in your browser, and your files are never uploaded.
         </p>
         <div className="finder-input">
           <Search size={18} aria-hidden />

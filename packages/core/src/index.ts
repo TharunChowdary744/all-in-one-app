@@ -11,6 +11,11 @@ export * from './lib/hash';
 export * from './lib/qr';
 export * from './lib/markdown';
 export * from './lib/format';
+export * from './lib/calc/expression';
+export * from './lib/calc/money';
+export * from './lib/calc/finance';
+export * from './lib/calc/everyday';
+export * from './lib/calc/specs';
 
 export const APP_NAME = 'OmniKit';
 export const APP_TAGLINE = 'Everyday file, text and developer tools that run entirely on your device.';

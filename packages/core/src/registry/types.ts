@@ -3,7 +3,9 @@ export type IconName =
   | 'Image' | 'FileStack' | 'FileType' | 'Type' | 'Braces' | 'ArrowLeftRight' | 'ShieldCheck'
   | 'RefreshCcw' | 'Scaling' | 'Images' | 'Merge' | 'Scissors' | 'FileImage' | 'FileText' | 'FileCode'
   | 'Heading' | 'Table' | 'Pilcrow' | 'CaseSensitive' | 'Eraser' | 'Binary' | 'Link' | 'Fingerprint'
-  | 'QrCode' | 'Ruler' | 'Palette' | 'Clock' | 'KeyRound' | 'Hash';
+  | 'QrCode' | 'Ruler' | 'Palette' | 'Clock' | 'KeyRound' | 'Hash'
+  | 'Landmark' | 'Calculator' | 'TrendingUp' | 'PiggyBank' | 'HandCoins' | 'House' | 'Percent' | 'ChartLine'
+  | 'Receipt' | 'BadgePercent' | 'Scale' | 'CalendarDays' | 'UsersRound';
 
 export type Platform = 'web' | 'mobile';
 
@@ -14,7 +16,9 @@ export type CategoryId =
   | 'text'
   | 'developer'
   | 'converter'
-  | 'security';
+  | 'security'
+  | 'finance'
+  | 'calculator';
 
 export interface Category {
   id: CategoryId;

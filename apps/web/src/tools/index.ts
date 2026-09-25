@@ -1,6 +1,10 @@
-import { lazy, type ComponentType, type LazyExoticComponent } from 'react';
+import { createElement, lazy, type ComponentType, type LazyExoticComponent } from 'react';
 
 type ToolComponent = LazyExoticComponent<ComponentType>;
+
+/** Every form calculator shares one lazily loaded component, configured by its spec in @omnikit/core. */
+const formCalculator = (toolId: string): ToolComponent =>
+  lazy(() => import('./calc/FormCalculator').then((m) => ({ default: () => createElement(m.FormCalculator, { toolId }) })));
 
 /** Web implementations keyed by the tool id from @omnikit/core's registry. Each is code-split. */
 export const toolComponents: Record<string, ToolComponent> = {
@@ -27,4 +31,9 @@ export const toolComponents: Record<string, ToolComponent> = {
   'timestamp-converter': lazy(() => import('./TimestampConverter')),
   'password-generator': lazy(() => import('./PasswordGenerator')),
   'hash-generator': lazy(() => import('./HashGenerator')),
+  'scientific-calculator': lazy(() => import('./calc/ScientificCalculator').then((m) => ({ default: m.ScientificCalculator }))),
+  ...Object.fromEntries(
+    ['sip-calculator', 'lumpsum-calculator', 'swp-calculator', 'emi-calculator', 'interest-calculator', 'cagr-calculator', 'gst-calculator',
+      'percentage-calculator', 'bmi-calculator', 'date-calculator', 'tip-calculator'].map((id) => [id, formCalculator(id)]),
+  ),
 };
