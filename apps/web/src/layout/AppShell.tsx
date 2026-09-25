@@ -34,7 +34,7 @@ export function AppShell() {
     <div className="shell">
       <aside className={`sidebar ${navOpen ? 'open' : ''}`}>
         <NavLink to="/" className="brand">
-          <img src="/logo.svg" alt="" width={32} height={32} />
+          <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="" width={32} height={32} />
           <span>{APP_NAME}</span>
         </NavLink>
         <nav>
