@@ -1,8 +1,9 @@
-import { getCategory, getTool, getToolCode } from '@omnikit/core';
+import { getCategory, getTool } from '@omnikit/core';
 import { Star } from 'lucide-react';
 import { Suspense, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
+import { Breadcrumb } from '../components/Breadcrumb';
 import { RegistryIcon } from '../components/Icon';
 import { Spinner } from '../components/ui';
 import { useAppState } from '../state/AppState';
@@ -30,20 +31,19 @@ export function ToolPage() {
   const fav = isFavorite(tool.id);
 
   return (
-    <div className="tool-page">
-      <nav className="breadcrumb">
-        <Link to="/">Index</Link> / <Link to={`/category/${category.id}`}>{category.name}</Link> / <span className="current">{getToolCode(tool)}</span>
-      </nav>
+    <div className="tool-page" data-cat={tool.category}>
+      <Breadcrumb items={[{ label: 'All tools', to: '/' }, { label: category.name, to: `/category/${category.id}` }, { label: tool.name }]} />
       <header className="page-header">
         <div className="page-icon">
-          <RegistryIcon name={tool.icon} size={26} />
+          <RegistryIcon name={tool.icon} size={24} strokeWidth={1.75} />
         </div>
         <div className="page-header-text">
           <h1>{tool.name}</h1>
           <p>{tool.description}</p>
         </div>
-        <button type="button" className={`btn ${fav ? 'btn-primary' : 'btn-outline'}`} onClick={() => toggleFavorite(tool.id)} aria-pressed={fav}>
-          <Star size={15} strokeWidth={1.6} fill={fav ? 'currentColor' : 'none'} /> {fav ? 'Starred' : 'Star'}
+        <button type="button" className="btn btn-outline" onClick={() => toggleFavorite(tool.id)} aria-pressed={fav} title={fav ? 'Starred' : 'Star tool'}>
+          <Star size={16} strokeWidth={1.75} fill={fav ? 'var(--accent)' : 'none'} color={fav ? 'var(--accent)' : 'currentColor'} />
+          <span className="btn-label">{fav ? 'Starred' : 'Star tool'}</span>
         </button>
       </header>
       <Suspense

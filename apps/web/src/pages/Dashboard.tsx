@@ -1,113 +1,104 @@
-import { categories, getTool, getToolsByCategory, searchTools, tools, type CategoryId } from '@omnikit/core';
+import { categories, getCategory, getTool, getToolsByCategory, searchTools, tools, type CategoryId } from '@omnikit/core';
 import { Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
+import { RegistryIcon } from '../components/Icon';
 import { ToolCard, ToolPill } from '../components/ToolCard';
 import { useAppState } from '../state/AppState';
 
 export function Dashboard() {
-  const { favorites, recents, usage, filesProcessed, clearHistory } = useAppState();
+  const { favorites, recents, clearHistory } = useAppState();
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<CategoryId | 'all'>('all');
 
   const favoriteTools = favorites.map(getTool).filter((t) => t !== undefined);
   const recentTools = recents.map((r) => getTool(r.id)).filter((t) => t !== undefined);
-  const launches = Object.values(usage).reduce((a, b) => a + b, 0);
   const results = useMemo(() => searchTools(query, filter === 'all' ? tools : getToolsByCategory(filter)), [query, filter]);
-  const filtering = query.trim() !== '' || filter !== 'all';
+  const searching = query.trim() !== '';
+  const visibleCategories = filter === 'all' ? categories : [getCategory(filter)];
 
   return (
     <div>
-      <header className="masthead">
-        <div>
-          <span className="label">Index · {tools.length} tools in {categories.length} sections</span>
-          <h1>
-            Everyday tools.
-            <br />
-            <em>No uploads.</em>
-          </h1>
-          <p>Convert images and documents, work with PDFs, format data and generate secrets. Every tool runs locally in your browser.</p>
-        </div>
-        <div className="ledger" aria-label="Your activity">
-          <div className="ledger-item">
-            <div className="ledger-value">{String(tools.length).padStart(2, '0')}</div>
-            <span className="label">Tools</span>
-          </div>
-          <div className="ledger-item">
-            <div className="ledger-value">{String(favorites.length).padStart(2, '0')}</div>
-            <span className="label">Starred</span>
-          </div>
-          <div className="ledger-item">
-            <div className="ledger-value">{String(launches).padStart(2, '0')}</div>
-            <span className="label">Launches</span>
-          </div>
-          <div className="ledger-item">
-            <div className="ledger-value">{String(filesProcessed).padStart(2, '0')}</div>
-            <span className="label">Files processed</span>
-          </div>
-        </div>
-      </header>
-
-      <div className="finder">
+      <section className="intro" aria-labelledby="intro-title">
+        <h1 id="intro-title">All tools</h1>
+        <p>
+          {tools.length} tools for images, PDFs, documents, text and code. Everything runs in your browser, and your files are never uploaded.
+        </p>
         <div className="finder-input">
-          <Search size={17} />
-          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search by name or format — “webp”, “pdf to word”, “sha256”" aria-label="Search tools" />
+          <Search size={18} aria-hidden />
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search by tool or file format, e.g. “webp” or “pdf to word”"
+            aria-label="Search tools"
+          />
         </div>
-        <div className="tabs" role="tablist" aria-label="Filter by section">
-          <button type="button" role="tab" aria-selected={filter === 'all'} className={`tab ${filter === 'all' ? 'active' : ''}`} onClick={() => setFilter('all')}>
+        <div className="tabs" role="group" aria-label="Filter by category">
+          <button type="button" aria-pressed={filter === 'all'} className={`tab ${filter === 'all' ? 'active' : ''}`} onClick={() => setFilter('all')}>
             All
           </button>
           {categories.map((c) => (
-            <button key={c.id} type="button" role="tab" aria-selected={filter === c.id} className={`tab ${filter === c.id ? 'active' : ''}`} onClick={() => setFilter(c.id)}>
+            <button key={c.id} type="button" data-cat={c.id} aria-pressed={filter === c.id} className={`tab ${filter === c.id ? 'active' : ''}`} onClick={() => setFilter(c.id)}>
+              <RegistryIcon name={c.icon} size={15} strokeWidth={1.75} />
               {c.name}
             </button>
           ))}
         </div>
-      </div>
+      </section>
 
-      {!filtering && (recentTools.length > 0 || favoriteTools.length > 0) && (
+      {!searching && filter === 'all' && (recentTools.length > 0 || favoriteTools.length > 0) && (
         <div className="shelf">
           {recentTools.length > 0 && (
-            <div style={{ marginBottom: 18 }}>
+            <section aria-labelledby="recent-title">
               <div className="shelf-head">
-                <span className="label">Recently used</span>
+                <h2 id="recent-title">Recently used</h2>
                 <button type="button" className="btn btn-ghost btn-sm" onClick={clearHistory}>
-                  Clear
+                  Clear history
                 </button>
               </div>
               <div className="shelf-links">{recentTools.map((t) => <ToolPill key={t.id} tool={t} />)}</div>
-            </div>
+            </section>
           )}
           {favoriteTools.length > 0 && (
-            <div>
+            <section aria-labelledby="starred-title">
               <div className="shelf-head">
-                <span className="label">Starred</span>
+                <h2 id="starred-title">Starred</h2>
               </div>
               <div className="shelf-links">{favoriteTools.map((t) => <ToolPill key={t.id} tool={t} />)}</div>
-            </div>
+            </section>
           )}
         </div>
       )}
 
-      {filtering ? (
-        <section className="section">
+      {searching ? (
+        <section className="section" aria-live="polite">
           <div className="section-head">
-            <span className="section-index">{String(results.length).padStart(2, '0')}</span>
-            <h2>{results.length === 1 ? 'Match' : 'Matches'}</h2>
+            <h2>
+              {results.length} {results.length === 1 ? 'result' : 'results'} for “{query.trim()}”
+            </h2>
           </div>
-          {results.length === 0 ? <div className="empty">Nothing matches that search. Try a file format like “png” or “docx”.</div> : <div className="catalog">{results.map((t) => <ToolCard key={t.id} tool={t} />)}</div>}
+          {results.length === 0 ? (
+            <div className="empty-inline">
+              <strong>No tools match that search.</strong>
+              <span>Try a file format such as “png”, “docx” or “csv”, or browse every category.</span>
+              <button type="button" className="btn btn-outline btn-sm" onClick={() => { setQuery(''); setFilter('all'); }}>
+                Clear search
+              </button>
+            </div>
+          ) : (
+            <div className="catalog">{results.map((t) => <ToolCard key={t.id} tool={t} />)}</div>
+          )}
         </section>
       ) : (
-        categories.map((c, i) => {
+        visibleCategories.map((c) => {
           const list = getToolsByCategory(c.id);
           return (
-            <section key={c.id} className="section" id={c.id}>
+            <section key={c.id} className="section" id={c.id} aria-labelledby={`${c.id}-title`}>
               <div className="section-head">
-                <span className="section-index">{String(i + 1).padStart(2, '0')}</span>
-                <h2>{c.name}</h2>
-                <p>
-                  {c.description} <span className="mono">· {list.length}</span>
-                </p>
+                <h2 id={`${c.id}-title`}>{c.name}</h2>
+                <p>{c.description}</p>
+                <span className="count">{list.length} tools</span>
               </div>
               <div className="catalog">{list.map((t) => <ToolCard key={t.id} tool={t} />)}</div>
             </section>

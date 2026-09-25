@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Alert, Card, CopyButton, Field } from '../components/ui';
 import { errorMessage } from '../lib/files';
 
-const strengthColors = ['#c0352b', '#e0531f', '#c9962b', '#6f8f3a', '#3d7a4a'];
+const strengthColors = ['#b3261e', '#b8431a', '#8a5f0e', '#3f7650', '#2f6f3e'];
 
 export default function PasswordGenerator() {
   const [opts, setOpts] = useState<PasswordOptions>(defaultPasswordOptions);

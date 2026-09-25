@@ -1,4 +1,4 @@
-import { getToolCode, isToolAvailable, type ToolDefinition } from '@omnikit/core';
+import { isToolAvailable, type ToolDefinition } from '@omnikit/core';
 import { Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -12,40 +12,37 @@ export function ToolCard({ tool }: { tool: ToolDefinition }) {
   const webOnly = !isToolAvailable(tool, 'mobile');
 
   return (
-    <Link to={`/tools/${tool.id}`} className="entry">
-      <div className="entry-top">
-        <span className="entry-code">{getToolCode(tool)}</span>
-        <button
-          type="button"
-          className={`star ${fav ? 'active' : ''}`}
-          aria-label={fav ? `Unstar ${tool.name}` : `Star ${tool.name}`}
-          aria-pressed={fav}
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            toggleFavorite(tool.id);
-          }}
-        >
-          <Star size={15} strokeWidth={1.6} fill={fav ? 'currentColor' : 'none'} />
-        </button>
-      </div>
-      <div className="entry-icon">
+    <div className="entry" data-cat={tool.category}>
+      <span className="entry-icon" aria-hidden>
         <RegistryIcon name={tool.icon} />
-      </div>
-      <div className="entry-name">{tool.name}</div>
-      <p className="entry-desc">{tool.description}</p>
-      <div className="entry-tags">
+      </span>
+      {/* The name is the link; its ::after stretches over the whole cell so the card stays clickable. */}
+      <Link to={`/tools/${tool.id}`} className="entry-name">
+        {tool.name}
+      </Link>
+      <span className="entry-desc">{tool.description}</span>
+      <span className="entry-tags">
         {tool.isNew && <span className="tag tag-accent">New</span>}
-        {webOnly && <span className="tag">Web only</span>}
-      </div>
-    </Link>
+        {webOnly && <span className="tag" title="Not available in the mobile app">Web only</span>}
+      </span>
+      <button
+        type="button"
+        className={`star ${fav ? 'active' : ''}`}
+        aria-label={fav ? `Unstar ${tool.name}` : `Star ${tool.name}`}
+        aria-pressed={fav}
+        title={fav ? 'Starred' : 'Star'}
+        onClick={() => toggleFavorite(tool.id)}
+      >
+        <Star size={16} strokeWidth={1.75} fill={fav ? 'currentColor' : 'none'} />
+      </button>
+    </div>
   );
 }
 
 /** Compact link used for recent / starred shelves. */
 export function ToolPill({ tool }: { tool: ToolDefinition }) {
   return (
-    <Link to={`/tools/${tool.id}`} className="pill">
+    <Link to={`/tools/${tool.id}`} className="pill" data-cat={tool.category}>
       <RegistryIcon name={tool.icon} size={16} />
       {tool.name}
     </Link>
