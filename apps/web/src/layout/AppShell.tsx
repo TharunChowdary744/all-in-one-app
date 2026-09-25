@@ -1,9 +1,10 @@
 import { APP_NAME, categories, getToolsByCategory } from '@omnikit/core';
-import { LayoutGrid, Menu, Monitor, Moon, Search, Star, Sun } from 'lucide-react';
+import { LayoutGrid, Menu, Monitor, Moon, Search, ShieldCheck, Star, Sun } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 
 import { CommandPalette } from '../components/CommandPalette';
+import { RegistryIcon } from '../components/Icon';
 import { LogoMark } from '../components/Logo';
 import { useAppState, type ThemePreference } from '../state/AppState';
 
@@ -45,26 +46,29 @@ export function AppShell() {
         <nav>
           <div className="nav-group">
             <NavLink to="/" end className="nav-link">
-              <LayoutGrid size={16} strokeWidth={1.6} /> All tools
+              <LayoutGrid size={17} strokeWidth={1.75} /> All tools
             </NavLink>
             <NavLink to="/favorites" className="nav-link">
-              <Star size={16} strokeWidth={1.6} /> Starred
-              <span className="nav-count">{favorites.length || ''}</span>
+              <Star size={17} strokeWidth={1.75} /> Starred
+              {favorites.length > 0 && <span className="nav-count">{favorites.length}</span>}
             </NavLink>
           </div>
           <div className="nav-group">
-            <span className="label">Sections</span>
+            <span className="label">Categories</span>
             {categories.map((c) => (
-              <NavLink key={c.id} to={`/category/${c.id}`} className="nav-link">
-                <span className="nav-code">{c.code}</span> {c.name}
-                <span className="nav-count">{String(getToolsByCategory(c.id).length).padStart(2, '0')}</span>
+              <NavLink key={c.id} to={`/category/${c.id}`} className="nav-link" data-cat={c.id}>
+                <RegistryIcon name={c.icon} size={17} strokeWidth={1.75} /> {c.name}
+                <span className="nav-count">{getToolsByCategory(c.id).length}</span>
               </NavLink>
             ))}
           </div>
         </nav>
         <div className="sidebar-footer">
-          <strong>Runs on your device.</strong>
-          Files are processed in the browser and never uploaded.
+          <ShieldCheck size={16} strokeWidth={1.75} aria-hidden />
+          <div>
+            <strong>Private by design</strong>
+            Files are processed in your browser and never uploaded.
+          </div>
         </div>
       </aside>
       {navOpen && <div className="sidebar-backdrop" onClick={() => setNavOpen(false)} />}
@@ -80,7 +84,7 @@ export function AppShell() {
           </Link>
           <button type="button" className="search-trigger" onClick={() => setPaletteOpen(true)} aria-label="Search tools">
             <Search size={16} />
-            <span className="search-placeholder">Find a tool…</span>
+            <span className="search-placeholder">Search tools</span>
             <kbd>⌘K</kbd>
           </button>
           <span className="topbar-spacer" />

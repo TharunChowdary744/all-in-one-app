@@ -37,7 +37,11 @@ Both apps share one tool registry and all pure conversion logic through `@omniki
 
 ## Design
 
-OmniKit uses a "workbench catalog" look: warm paper (`#f3f0e8`), ink (`#1c1b17`) and a single signal-orange accent (`#e0531f`), with flat surfaces separated by hairlines. Type is **Bricolage Grotesque** (display), **IBM Plex Sans** (text) and **IBM Plex Mono** (labels). The fonts are bundled with both apps, so nothing loads from a font CDN. Every tool has a catalog code such as `PDF-03`, and icons come from [Lucide](https://lucide.dev). The same tokens are defined in `apps/web/src/styles.css` and `apps/mobile/src/theme/colors.ts`.
+- **Palette:** warm paper neutrals, ink, and a signal-orange brand accent. Each tool category has its own muted earth tone (terracotta, brick, steel blue, ochre, forest, teal, plum), used on icons and page washes so categories are easy to scan.
+- **Type:** Bricolage Grotesque for page and section titles, IBM Plex Sans for interface text, and IBM Plex Mono only for code, hashes and data. The fonts are bundled, so nothing loads from a font CDN.
+- **Gradients:** used in two places only. A warm wash frames the search on the home screen, and a category-tinted wash sits behind each tool's header.
+- **Accessibility:** every text and background pair meets WCAG AA in light and dark themes, focus rings are visible, and reduced-motion preferences are respected.
+- **Tokens:** defined in `apps/web/src/styles.css` and `apps/mobile/src/theme/colors.ts`.
 
 ## Repository layout
 

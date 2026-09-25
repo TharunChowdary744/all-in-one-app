@@ -7,7 +7,7 @@ import { errorMessage } from '@/lib/files';
 import { mono, radius, useColors } from '@/theme/colors';
 import { Text } from '@/components/Text';
 
-const COLORS = ['#c0352b', '#e0531f', '#c9962b', '#6f8f3a', '#3d7a4a'];
+const COLORS = ['#b3261e', '#b8431a', '#8a5f0e', '#3f7650', '#2f6f3e'];
 
 export default function PasswordGenerator() {
   const c = useColors();
