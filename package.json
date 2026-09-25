@@ -1,0 +1,24 @@
+{
+  "name": "omnikit",
+  "version": "1.0.0",
+  "private": true,
+  "description": "OmniKit — every everyday tool in one app. Monorepo for the web (React) and mobile (React Native / Expo) apps.",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "web": "npm run dev --workspace @omnikit/web",
+    "web:build": "npm run build --workspace @omnikit/web",
+    "mobile": "npm run start --workspace @omnikit/mobile",
+    "mobile:android": "npm run android --workspace @omnikit/mobile",
+    "mobile:ios": "npm run ios --workspace @omnikit/mobile",
+    "test": "npm run test --workspace @omnikit/core",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "build": "npm run web:build"
+  },
+  "engines": {
+    "node": ">=20",
+    "npm": ">=11"
+  }
+}

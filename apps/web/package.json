@@ -1,0 +1,31 @@
+{
+  "name": "@omnikit/web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@omnikit/core": "*",
+    "docx": "^9.7.2",
+    "dompurify": "^3.4.16",
+    "jszip": "^3.10.2",
+    "mammoth": "^1.12.3",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "~5.4.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-router-dom": "^7.18.4"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.2",
+    "@types/react-dom": "~19.2.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "typescript": "~6.0.3",
+    "vite": "^8.0.0"
+  }
+}

@@ -1,0 +1,56 @@
+import { getCategory, getTool } from '@omnikit/core';
+import { Suspense, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
+
+import { Spinner } from '../components/ui';
+import { useAppState } from '../state/AppState';
+import { toolComponents } from '../tools';
+import { NotFound } from './NotFound';
+
+export function ToolPage() {
+  const { id = '' } = useParams();
+  const tool = getTool(id);
+  const { isFavorite, toggleFavorite, recordVisit } = useAppState();
+
+  useEffect(() => {
+    if (tool) {
+      recordVisit(tool.id);
+      document.title = `${tool.name} · OmniKit`;
+    }
+    return () => {
+      document.title = 'OmniKit';
+    };
+  }, [tool, recordVisit]);
+
+  const Component = toolComponents[id];
+  if (!tool || !Component) return <NotFound />;
+  const category = getCategory(tool.category);
+  const fav = isFavorite(tool.id);
+
+  return (
+    <div className="tool-page">
+      <nav className="breadcrumb">
+        <Link to="/">Dashboard</Link> / <Link to={`/category/${category.id}`}>{category.name}</Link> / <span>{tool.name}</span>
+      </nav>
+      <header className="page-header" style={{ '--accent': category.color } as React.CSSProperties}>
+        <div className="page-icon">{tool.icon}</div>
+        <div className="page-header-text">
+          <h1>{tool.name}</h1>
+          <p>{tool.description}</p>
+        </div>
+        <button type="button" className={`btn ${fav ? 'btn-primary' : 'btn-outline'}`} onClick={() => toggleFavorite(tool.id)} aria-pressed={fav}>
+          {fav ? '★ Favorited' : '☆ Favorite'}
+        </button>
+      </header>
+      <Suspense
+        fallback={
+          <div className="loading">
+            <Spinner /> Loading tool…
+          </div>
+        }
+      >
+        <Component />
+      </Suspense>
+    </div>
+  );
+}

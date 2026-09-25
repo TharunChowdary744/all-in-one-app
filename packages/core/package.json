@@ -1,0 +1,28 @@
+{
+  "name": "@omnikit/core",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Platform-agnostic tool registry and pure conversion logic shared by the OmniKit web and mobile apps.",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "react-native": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@noble/hashes": "^2.0.1",
+    "qrcode": "^1.5.4",
+    "marked": "^18.0.14"
+  },
+  "devDependencies": {
+    "@types/qrcode": "^1.5.5",
+    "typescript": "~6.0.3",
+    "vitest": "^4.0.0"
+  }
+}
