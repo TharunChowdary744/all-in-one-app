@@ -1,3 +1,4 @@
+import { Download, X } from 'lucide-react';
 import { formatBytes, replaceExtension } from '@omnikit/core';
 import { useEffect, useRef, useState } from 'react';
 
@@ -71,11 +72,11 @@ export default function ImageConverter() {
         </div>
         <div className="actions">
           <button type="button" className="btn btn-primary" disabled={!items.length || busy} onClick={convertAll}>
-            {busy ? <Spinner /> : '⚡'} Convert {items.length || ''} image{items.length === 1 ? '' : 's'} to {target.label}
+            {busy && <Spinner />} Convert {items.length || ''} image{items.length === 1 ? '' : 's'} to {target.label}
           </button>
           {done.length > 1 && (
             <button type="button" className="btn btn-outline" onClick={() => zipAndDownload(done.map((i) => i.result!), `converted-${target.ext}.zip`)}>
-              ⬇️ Download all (.zip)
+              <Download size={14} /> Download all (.zip)
             </button>
           )}
           {items.length > 0 && (
@@ -113,8 +114,8 @@ export default function ImageConverter() {
                     Download
                   </button>
                 )}
-                <button type="button" className="icon-btn" aria-label="Remove" onClick={() => setItems((all) => all.filter((_, i) => i !== idx))}>
-                  ✕
+                <button type="button" className="icon-btn plain" aria-label="Remove" onClick={() => setItems((all) => all.filter((_, i) => i !== idx))}>
+                  <X size={15} />
                 </button>
               </li>
             ))}

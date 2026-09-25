@@ -1,3 +1,4 @@
+import { FileText } from 'lucide-react';
 import { useState } from 'react';
 
 import { FileDrop } from '../components/FileDrop';
@@ -51,12 +52,12 @@ export default function PdfMerge() {
     <div className="tool-layout">
       <Card title="Add PDFs in the order you want them merged">
         <FileDrop accept="application/pdf,.pdf" multiple onFiles={(files) => setItems((p) => [...p, ...files.map((file) => ({ file, key: String(seq++) }))])} />
-        {items.length > 0 && <FileOrderList items={items} onChange={setItems} getKey={(i) => i.key} renderThumb={() => <span className="thumb thumb-icon">📕</span>} />}
+        {items.length > 0 && <FileOrderList items={items} onChange={setItems} getKey={(i) => i.key} renderThumb={() => <span className="thumb thumb-icon"><FileText size={18} strokeWidth={1.6} /></span>} />}
         <Alert>{error}</Alert>
         {pages !== null && !error && <Alert kind="success">Merged into one PDF with {pages} pages.</Alert>}
         <div className="actions">
           <button type="button" className="btn btn-primary" disabled={items.length < 2 || busy} onClick={merge}>
-            {busy ? <Spinner /> : '🧩'} Merge {items.length} PDFs
+            {busy && <Spinner />} Merge {items.length} PDFs
           </button>
           {items.length === 1 && <span className="muted">Add at least one more file.</span>}
         </div>

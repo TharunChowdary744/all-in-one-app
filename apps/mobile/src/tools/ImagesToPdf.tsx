@@ -1,14 +1,16 @@
+import { ArrowUp, ArrowDown, X } from 'lucide-react-native';
 import * as Print from 'expo-print';
 import { Image } from 'expo-image';
 import { SaveFormat } from 'expo-image-manipulator';
 import { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import { Button, Card, Muted, Notice, Screen, Segmented } from '@/components/ui';
 import { errorMessage, shareUri } from '@/lib/files';
 import { pickImages, processImage, type PickedImage } from '@/lib/images';
 import { useAppState } from '@/state/AppState';
 import { radius, useColors } from '@/theme/colors';
+import { Text } from '@/components/Text';
 
 type PageSize = 'a4' | 'letter';
 const SIZES: Record<PageSize, { width: number; height: number }> = { a4: { width: 595, height: 842 }, letter: { width: 612, height: 792 } };
@@ -63,7 +65,7 @@ export default function ImagesToPdf() {
 
   return (
     <Screen>
-      <Button label="➕ Add images" kind={images.length ? 'outline' : 'primary'} onPress={() => add().catch(() => undefined)} />
+      <Button label="Add images" kind={images.length ? 'outline' : 'primary'} onPress={() => add().catch(() => undefined)} />
       <Segmented value={size} onChange={setSize} options={[{ value: 'a4', label: 'A4' }, { value: 'letter', label: 'US Letter' }]} />
       {images.length === 0 && <Muted>Each image becomes one page. You can reorder them before creating the PDF.</Muted>}
       {images.map((img, i) => (
@@ -71,15 +73,15 @@ export default function ImagesToPdf() {
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
             <Text style={{ color: c.muted, fontWeight: '800', width: 20 }}>{i + 1}</Text>
             <Image source={{ uri: img.uri }} style={{ width: 52, height: 52, borderRadius: radius.sm }} contentFit="cover" />
-            <Text numberOfLines={1} style={{ color: c.text, flex: 1 }}>{img.name}</Text>
-            <Pressable hitSlop={8} onPress={() => move(i, i - 1)}><Text style={{ fontSize: 18, color: c.text2 }}>↑</Text></Pressable>
-            <Pressable hitSlop={8} onPress={() => move(i, i + 1)}><Text style={{ fontSize: 18, color: c.text2 }}>↓</Text></Pressable>
-            <Pressable hitSlop={8} onPress={() => setImages(images.filter((_, k) => k !== i))}><Text style={{ fontSize: 18, color: c.bad }}>✕</Text></Pressable>
+            <Text numberOfLines={1} style={{ color: c.ink, flex: 1 }}>{img.name}</Text>
+            <Pressable hitSlop={8} onPress={() => move(i, i - 1)}><ArrowUp size={18} color={c.ink2} /></Pressable>
+            <Pressable hitSlop={8} onPress={() => move(i, i + 1)}><ArrowDown size={18} color={c.ink2} /></Pressable>
+            <Pressable hitSlop={8} onPress={() => setImages(images.filter((_, k) => k !== i))}><X size={18} color={c.bad} /></Pressable>
           </View>
         </Card>
       ))}
       <Notice>{error}</Notice>
-      <Button label={`🗂️ Create PDF (${images.length} page${images.length === 1 ? '' : 's'})`} onPress={build} loading={busy} disabled={!images.length} />
+      <Button label={`Create PDF (${images.length} page${images.length === 1 ? '' : 's'})`} onPress={build} loading={busy} disabled={!images.length} />
     </Screen>
   );
 }

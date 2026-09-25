@@ -1,3 +1,4 @@
+import { Download } from 'lucide-react';
 import { uuidv4 } from '@omnikit/core';
 import { useState } from 'react';
 
@@ -29,10 +30,10 @@ export default function UuidGenerator() {
           <label className="checkbox"><input type="checkbox" checked={hyphens} onChange={(e) => setHyphens(e.target.checked)} /> Hyphens</label>
         </div>
         <div className="actions">
-          <button type="button" className="btn btn-primary" onClick={() => setIds(make(count, upper, hyphens))}>🎲 Generate</button>
+          <button type="button" className="btn btn-primary" onClick={() => setIds(make(count, upper, hyphens))}>Generate</button>
         </div>
       </Card>
-      <Card title={`${ids.length} UUID v4`} actions={<><CopyButton text={text} label="Copy all" /><button type="button" className="btn btn-outline btn-sm" onClick={() => downloadText(text, 'uuids.txt')}>⬇️ .txt</button></>}>
+      <Card title={`${ids.length} UUID v4`} actions={<><CopyButton text={text} label="Copy all" /><button type="button" className="btn btn-outline btn-sm" onClick={() => downloadText(text, 'uuids.txt')}><Download size={14} /> .txt</button></>}>
         <ul className="mono-list">
           {ids.map((id, i) => (
             <li key={i}>

@@ -1,3 +1,4 @@
+import { Download } from 'lucide-react';
 import { formatJson, minifyJson, type JsonResult } from '@omnikit/core';
 import { useState } from 'react';
 
@@ -15,8 +16,8 @@ export default function JsonFormatter() {
   return (
     <>
       <div className="toolbar">
-        <button type="button" className="btn btn-primary" onClick={() => run('format')}>✨ Beautify</button>
-        <button type="button" className="btn btn-outline" onClick={() => run('minify')}>🗜️ Minify</button>
+        <button type="button" className="btn btn-primary" onClick={() => run('format')}>Format</button>
+        <button type="button" className="btn btn-outline" onClick={() => run('minify')}>Minify</button>
         <Segmented value={indent} onChange={setIndent} label="Indentation" options={[{ value: 2, label: '2 spaces' }, { value: 4, label: '4 spaces' }, { value: 'tab', label: 'Tabs' }]} />
         <label className="checkbox"><input type="checkbox" checked={sortKeys} onChange={(e) => setSortKeys(e.target.checked)} /> Sort keys</label>
       </div>
@@ -30,7 +31,7 @@ export default function JsonFormatter() {
             result?.ok && (
               <>
                 <CopyButton text={result.output} />
-                <button type="button" className="btn btn-primary btn-sm" onClick={() => downloadText(result.output, 'data.json', 'application/json')}>⬇️ .json</button>
+                <button type="button" className="btn btn-primary btn-sm" onClick={() => downloadText(result.output, 'data.json', 'application/json')}><Download size={14} /> .json</button>
               </>
             )
           }
@@ -38,13 +39,13 @@ export default function JsonFormatter() {
           {!result && <p className="muted">Press Beautify or Minify.</p>}
           {result && !result.ok && (
             <Alert>
-              ❌ Invalid JSON: {result.error}
+              Invalid JSON: {result.error}
               {result.line ? ` (line ${result.line}, column ${result.column})` : ''}
             </Alert>
           )}
           {result?.ok && (
             <>
-              <Alert kind="success">✓ Valid JSON</Alert>
+              <Alert kind="success">Valid JSON</Alert>
               <textarea className="code editor" readOnly value={result.output} aria-label="JSON output" />
             </>
           )}

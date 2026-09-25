@@ -16,12 +16,12 @@ export default function JsonFormatter() {
       <Segmented value={indent} onChange={setIndent} options={[{ value: 2, label: '2 spaces' }, { value: 4, label: '4 spaces' }]} />
       <Toggle label="Sort keys" value={sortKeys} onChange={setSortKeys} />
       <Row>
-        <Button label="✨ Beautify" onPress={() => setResult(formatJson(input, { indent, sortKeys }))} style={{ flex: 1 }} />
-        <Button kind="outline" label="🗜️ Minify" onPress={() => setResult(minifyJson(input))} style={{ flex: 1 }} />
+        <Button label="Format" onPress={() => setResult(formatJson(input, { indent, sortKeys }))} style={{ flex: 1 }} />
+        <Button kind="outline" label="Minify" onPress={() => setResult(minifyJson(input))} style={{ flex: 1 }} />
       </Row>
-      {result && !result.ok && <Notice>❌ {result.error}{result.line ? ` (line ${result.line}, col ${result.column})` : ''}</Notice>}
+      {result && !result.ok && <Notice>Invalid JSON: {result.error}{result.line ? ` (line ${result.line}, col ${result.column})` : ''}</Notice>}
       {result?.ok && (
-        <Card title="✓ Valid JSON" right={<Row><CopyButton text={result.output} /><Button small kind="ghost" label="Share" onPress={() => shareText(result.output, 'data.json', 'application/json')} /></Row>}>
+        <Card title="Valid JSON" right={<Row><CopyButton text={result.output} /><Button small kind="ghost" label="Share" onPress={() => shareText(result.output, 'data.json', 'application/json')} /></Row>}>
           <Output value={result.output} />
         </Card>
       )}

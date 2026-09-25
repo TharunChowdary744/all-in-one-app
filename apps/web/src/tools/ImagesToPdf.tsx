@@ -101,7 +101,7 @@ export default function ImagesToPdf() {
         <Alert>{error}</Alert>
         <div className="actions">
           <button type="button" className="btn btn-primary" disabled={!items.length || busy} onClick={build}>
-            {busy ? <Spinner /> : '🗂️'} Create PDF ({items.length} page{items.length === 1 ? '' : 's'})
+            {busy && <Spinner />} Create PDF ({items.length} page{items.length === 1 ? '' : 's'})
           </button>
         </div>
       </Card>

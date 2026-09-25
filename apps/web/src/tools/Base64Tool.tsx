@@ -1,3 +1,4 @@
+import { FolderOpen } from 'lucide-react';
 import { bytesToBase64, decodeBase64, encodeBase64, formatBytes } from '@omnikit/core';
 import { useMemo, useState } from 'react';
 
@@ -6,7 +7,7 @@ import { errorMessage } from '../lib/files';
 
 export default function Base64Tool() {
   const [mode, setMode] = useState<'encode' | 'decode'>('encode');
-  const [input, setInput] = useState('Hello, OmniKit! 👋');
+  const [input, setInput] = useState('Hello, OmniKit!');
   const [urlSafe, setUrlSafe] = useState(false);
   const [fileInfo, setFileInfo] = useState('');
   const [dataUrl, setDataUrl] = useState('');
@@ -33,7 +34,7 @@ export default function Base64Tool() {
         <Segmented value={mode} onChange={(m) => { setMode(m); if (result.out) setInput(result.out); setDataUrl(''); }} options={[{ value: 'encode', label: 'Encode' }, { value: 'decode', label: 'Decode' }]} />
         {mode === 'encode' && <label className="checkbox"><input type="checkbox" checked={urlSafe} onChange={(e) => setUrlSafe(e.target.checked)} /> URL-safe</label>}
         <label className="btn btn-outline btn-sm">
-          📂 Encode a file
+          <FolderOpen size={14} /> Encode a file
           <input type="file" hidden onChange={(e) => e.target.files?.[0] && encodeFile(e.target.files[0])} />
         </label>
       </div>

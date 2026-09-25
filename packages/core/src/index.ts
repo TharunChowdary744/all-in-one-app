@@ -13,4 +13,4 @@ export * from './lib/markdown';
 export * from './lib/format';
 
 export const APP_NAME = 'OmniKit';
-export const APP_TAGLINE = 'Every everyday tool, in one kit.';
+export const APP_TAGLINE = 'Everyday file, text and developer tools that run entirely on your device.';

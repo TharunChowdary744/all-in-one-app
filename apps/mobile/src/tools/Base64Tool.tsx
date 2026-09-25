@@ -6,7 +6,7 @@ import { errorMessage } from '@/lib/files';
 
 export default function Base64Tool() {
   const [mode, setMode] = useState<'encode' | 'decode'>('encode');
-  const [input, setInput] = useState('Hello, OmniKit! 👋');
+  const [input, setInput] = useState('Hello, OmniKit!');
   const [urlSafe, setUrlSafe] = useState(false);
   let out = '';
   let error = '';

@@ -1,12 +1,13 @@
 import { defaultPasswordOptions, generatePassword, passwordStrength, type PasswordOptions } from '@omnikit/core';
 import { useCallback, useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
 import { Button, Card, CopyButton, Notice, Row, Screen, Segmented, Toggle } from '@/components/ui';
 import { errorMessage } from '@/lib/files';
 import { mono, radius, useColors } from '@/theme/colors';
+import { Text } from '@/components/Text';
 
-const COLORS = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#10b981'];
+const COLORS = ['#c0352b', '#e0531f', '#c9962b', '#6f8f3a', '#3d7a4a'];
 
 export default function PasswordGenerator() {
   const c = useColors();
@@ -30,17 +31,17 @@ export default function PasswordGenerator() {
   return (
     <Screen>
       <Card>
-        <Text selectable style={[mono, { color: c.text, fontSize: 22, fontWeight: '700' }]}>{password || '—'}</Text>
+        <Text selectable style={[mono, { color: c.ink, fontSize: 22, fontWeight: '700' }]}>{password || '—'}</Text>
         <View style={{ flexDirection: 'row', gap: 6 }}>
           {[0, 1, 2, 3, 4].map((i) => (
-            <View key={i} style={{ flex: 1, height: 6, borderRadius: radius.sm, backgroundColor: i <= s.score ? COLORS[s.score] : c.border }} />
+            <View key={i} style={{ flex: 1, height: 6, borderRadius: radius.sm, backgroundColor: i <= s.score ? COLORS[s.score] : c.line }} />
           ))}
         </View>
-        <Text style={{ color: c.text2 }}>
+        <Text style={{ color: c.ink2 }}>
           Strength: <Text style={{ color: COLORS[s.score], fontWeight: '700' }}>{s.label}</Text> · ~{s.bits} bits
         </Text>
         <Row>
-          <Button label="🔄 Generate" onPress={regenerate} style={{ flex: 1 }} />
+          <Button label="Generate" onPress={regenerate} style={{ flex: 1 }} />
           <CopyButton text={password} />
         </Row>
       </Card>

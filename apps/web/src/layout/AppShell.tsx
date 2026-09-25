@@ -1,18 +1,21 @@
 import { APP_NAME, categories, getToolsByCategory } from '@omnikit/core';
+import { LayoutGrid, Menu, Monitor, Moon, Search, Star, Sun } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 
 import { CommandPalette } from '../components/CommandPalette';
+import { LogoMark } from '../components/Logo';
 import { useAppState, type ThemePreference } from '../state/AppState';
 
 const themeCycle: Record<ThemePreference, ThemePreference> = { system: 'light', light: 'dark', dark: 'system' };
-const themeIcon: Record<ThemePreference, string> = { system: '🖥️', light: '☀️', dark: '🌙' };
+const ThemeIcon = { system: Monitor, light: Sun, dark: Moon };
 
 export function AppShell() {
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
   const { theme, setTheme, favorites } = useAppState();
   const location = useLocation();
+  const Theme = ThemeIcon[theme];
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -33,50 +36,54 @@ export function AppShell() {
   return (
     <div className="shell">
       <aside className={`sidebar ${navOpen ? 'open' : ''}`}>
-        <NavLink to="/" className="brand">
-          <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="" width={32} height={32} />
-          <span>{APP_NAME}</span>
-        </NavLink>
+        <Link to="/" className="brand">
+          <LogoMark />
+          <span className="brand-name">{APP_NAME}</span>
+        </Link>
         <nav>
-          <NavLink to="/" end className="nav-link">
-            <span className="nav-icon">🏠</span> Dashboard
-          </NavLink>
-          <NavLink to="/favorites" className="nav-link">
-            <span className="nav-icon">⭐</span> Favorites
-            {favorites.length > 0 && <span className="nav-count">{favorites.length}</span>}
-          </NavLink>
-          <div className="nav-section">Categories</div>
-          {categories.map((c) => (
-            <NavLink key={c.id} to={`/category/${c.id}`} className="nav-link">
-              <span className="nav-icon">{c.icon}</span> {c.name}
-              <span className="nav-count">{getToolsByCategory(c.id).length}</span>
+          <div className="nav-group">
+            <NavLink to="/" end className="nav-link">
+              <LayoutGrid size={16} strokeWidth={1.6} /> All tools
             </NavLink>
-          ))}
+            <NavLink to="/favorites" className="nav-link">
+              <Star size={16} strokeWidth={1.6} /> Starred
+              <span className="nav-count">{favorites.length || ''}</span>
+            </NavLink>
+          </div>
+          <div className="nav-group">
+            <span className="label">Sections</span>
+            {categories.map((c) => (
+              <NavLink key={c.id} to={`/category/${c.id}`} className="nav-link">
+                <span className="nav-code">{c.code}</span> {c.name}
+                <span className="nav-count">{String(getToolsByCategory(c.id).length).padStart(2, '0')}</span>
+              </NavLink>
+            ))}
+          </div>
         </nav>
         <div className="sidebar-footer">
-          🔒 Files never leave your device — everything runs locally in your browser.
+          <strong>Runs on your device.</strong>
+          Files are processed in the browser and never uploaded.
         </div>
       </aside>
       {navOpen && <div className="sidebar-backdrop" onClick={() => setNavOpen(false)} />}
 
       <div className="main">
         <header className="topbar">
-          <button type="button" className="icon-btn menu-btn" aria-label="Open menu" onClick={() => setNavOpen(true)}>
-            ☰
+          <button type="button" className="icon-btn plain menu-btn" aria-label="Open menu" onClick={() => setNavOpen(true)}>
+            <Menu size={18} />
           </button>
-          <button type="button" className="search-trigger" onClick={() => setPaletteOpen(true)}>
-            <span aria-hidden>🔍</span>
-            <span className="search-placeholder">Search tools…</span>
+          <Link to="/" className="mobile-brand brand" style={{ padding: 0 }}>
+            <LogoMark size={24} />
+            <span className="brand-name" style={{ fontSize: 18 }}>{APP_NAME}</span>
+          </Link>
+          <button type="button" className="search-trigger" onClick={() => setPaletteOpen(true)} aria-label="Search tools">
+            <Search size={16} />
+            <span className="search-placeholder">Find a tool…</span>
             <kbd>⌘K</kbd>
           </button>
-          <button
-            type="button"
-            className="icon-btn"
-            aria-label={`Theme: ${theme}. Click to change.`}
-            title={`Theme: ${theme}`}
-            onClick={() => setTheme(themeCycle[theme])}
-          >
-            {themeIcon[theme]}
+          <span className="topbar-spacer" />
+          <button type="button" className="icon-btn plain" aria-label={`Theme: ${theme}. Click to change.`} title={`Theme: ${theme}`} onClick={() => setTheme(themeCycle[theme])}>
+            <Theme size={17} strokeWidth={1.6} />
           </button>
         </header>
         <main className="content">

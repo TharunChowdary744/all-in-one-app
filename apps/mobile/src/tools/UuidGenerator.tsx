@@ -12,7 +12,7 @@ export default function UuidGenerator() {
     <Screen>
       <Segmented value={count} onChange={(n) => { setCount(n); setIds(make(n, upper)); }} options={[1, 5, 10, 25].map((n) => ({ value: n, label: `${n}` }))} />
       <Toggle label="Uppercase" value={upper} onChange={(u) => { setUpper(u); setIds(make(count, u)); }} />
-      <Button label="🎲 Generate" onPress={() => setIds(make(count, upper))} />
+      <Button label="Generate" onPress={() => setIds(make(count, upper))} />
       <Card title={`${ids.length} UUID v4`} right={<CopyButton text={ids.join('\n')} label="Copy all" />}>
         {ids.map((id, i) => <ResultRow key={`${id}-${i}`} label={`#${i + 1}`} value={id} />)}
       </Card>

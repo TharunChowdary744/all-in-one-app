@@ -1,11 +1,13 @@
-import { getCategory, getTool, isToolAvailable } from '@omnikit/core';
+import { getTool, getToolCode, isToolAvailable } from '@omnikit/core';
 import { Stack, useLocalSearchParams } from 'expo-router';
+import { Monitor, Star } from 'lucide-react-native';
 import { useEffect } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
-import { Card, Muted, Screen } from '@/components/ui';
+import { RegistryIcon } from '@/components/Icon';
+import { Card, Heading, Label, Muted, Screen, Text } from '@/components/ui';
 import { useAppState } from '@/state/AppState';
-import { useColors } from '@/theme/colors';
+import { radius, useColors } from '@/theme/colors';
 import { toolScreens } from '@/tools';
 
 export default function ToolScreen() {
@@ -27,8 +29,8 @@ export default function ToolScreen() {
       options={{
         title: tool.name,
         headerRight: () => (
-          <Pressable hitSlop={12} onPress={() => toggleFavorite(tool.id)} accessibilityLabel="Toggle favorite" style={{ paddingHorizontal: 8 }}>
-            <Text style={{ fontSize: 22, color: fav ? '#f59e0b' : c.muted }}>{fav ? '★' : '☆'}</Text>
+          <Pressable hitSlop={12} onPress={() => toggleFavorite(tool.id)} accessibilityLabel={fav ? 'Unstar' : 'Star'} style={{ paddingHorizontal: 8 }}>
+            <Star size={21} strokeWidth={1.6} color={fav ? c.accent : c.ink} fill={fav ? c.accent : 'none'} />
           </Pressable>
         ),
       }}
@@ -36,19 +38,24 @@ export default function ToolScreen() {
   );
 
   if (!Component || !isToolAvailable(tool, 'mobile')) {
-    const category = getCategory(tool.category);
     return (
       <Screen>
         {header}
-        <View style={{ alignItems: 'center', gap: 10, paddingVertical: 32 }}>
-          <Text style={{ fontSize: 56 }}>{tool.icon}</Text>
-          <Text style={{ color: c.text, fontSize: 20, fontWeight: '800' }}>{tool.name}</Text>
-          <Text style={{ color: c.text2, textAlign: 'center' }}>{tool.description}</Text>
+        <View style={{ gap: 14, paddingVertical: 16 }}>
+          <View style={{ width: 56, height: 56, borderWidth: 1, borderColor: c.ink, borderRadius: radius.md, alignItems: 'center', justifyContent: 'center' }}>
+            <RegistryIcon name={tool.icon} size={26} color={c.ink} />
+          </View>
+          <Label>{getToolCode(tool)}</Label>
+          <Heading size={36}>{tool.name}</Heading>
+          <Text style={{ color: c.ink2, fontSize: 16, lineHeight: 23 }}>{tool.description}</Text>
         </View>
-        <Card title="💻 Available in OmniKit Web">
-          <Text style={{ color: c.text2, lineHeight: 20 }}>
-            This {category.name.toLowerCase()} tool needs desktop-class PDF and document engines, so it currently runs in the OmniKit web app. Open OmniKit in any browser (it works on your phone too) to use it — files still never leave your device.
-          </Text>
+        <Card title="Available on the web">
+          <View style={{ flexDirection: 'row', gap: 12 }}>
+            <Monitor size={20} color={c.accent} strokeWidth={1.6} />
+            <Text style={{ color: c.ink2, lineHeight: 21, flex: 1 }}>
+              This tool relies on desktop-class PDF and document engines, so it runs in the OmniKit web app. It works in any browser, including your phone's, and files still never leave your device.
+            </Text>
+          </View>
         </Card>
       </Screen>
     );

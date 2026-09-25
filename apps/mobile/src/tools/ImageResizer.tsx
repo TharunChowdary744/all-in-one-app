@@ -1,13 +1,14 @@
 import { formatBytes } from '@omnikit/core';
 import { Image } from 'expo-image';
 import { useState } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
 import { Button, Card, Input, Notice, Row, Screen, Segmented, Toggle } from '@/components/ui';
 import { errorMessage, shareUri } from '@/lib/files';
 import { outputFormats, pickImages, processImage, type PickedImage, type ProcessedImage } from '@/lib/images';
 import { useAppState } from '@/state/AppState';
 import { radius, useColors } from '@/theme/colors';
+import { Text } from '@/components/Text';
 
 export default function ImageResizer() {
   const c = useColors();
@@ -63,7 +64,7 @@ export default function ImageResizer() {
 
   return (
     <Screen>
-      <Button label={src ? '📷 Choose another image' : '📷 Choose an image'} kind={src ? 'outline' : 'primary'} onPress={() => pick().catch(() => undefined)} />
+      <Button label={src ? 'Choose another image' : 'Choose an image'} kind={src ? 'outline' : 'primary'} onPress={() => pick().catch(() => undefined)} />
       {src && (
         <>
           <Card title={`Original · ${src.width}×${src.height} · ${formatBytes(src.size)}`}>
@@ -71,7 +72,7 @@ export default function ImageResizer() {
               <View style={{ flex: 1 }}><Input label="Width" value={width} onChangeText={onW} keyboardType="number-pad" /></View>
               <View style={{ flex: 1 }}><Input label="Height" value={height} onChangeText={onH} keyboardType="number-pad" /></View>
             </Row>
-            <Toggle label="🔒 Keep aspect ratio" value={lock} onChange={setLock} />
+            <Toggle label="Keep aspect ratio" value={lock} onChange={setLock} />
             <Row>
               {[25, 50, 75, 100].map((p) => <Button key={p} small kind="outline" label={`${p}%`} onPress={() => preset(p)} />)}
             </Row>
@@ -79,7 +80,7 @@ export default function ImageResizer() {
             {target.label !== 'PNG' && (
               <Segmented value={quality} onChange={setQuality} options={[0.4, 0.6, 0.8, 1].map((q) => ({ value: q, label: `Quality ${Math.round(q * 100)}%` }))} />
             )}
-            <Button label="📐 Resize" onPress={run} loading={busy} disabled={!Number(width) || !Number(height)} />
+            <Button label="Resize" onPress={run} loading={busy} disabled={!Number(width) || !Number(height)} />
           </Card>
           <Notice>{error}</Notice>
         </>
@@ -87,7 +88,7 @@ export default function ImageResizer() {
       {result && src && (
         <Card title="Result" right={<Button small label="Share" onPress={() => shareUri(result.uri, target.mime)} />}>
           <Image source={{ uri: result.uri }} style={{ width: '100%', aspectRatio: result.width / result.height, borderRadius: radius.sm }} contentFit="contain" />
-          <Text style={{ color: c.text2 }}>
+          <Text style={{ color: c.ink2 }}>
             {result.width}×{result.height} · {formatBytes(result.size)}{' '}
             <Text style={{ color: result.size <= src.size ? c.good : c.bad }}>({Math.round((result.size / Math.max(1, src.size) - 1) * 100)}%)</Text>
           </Text>

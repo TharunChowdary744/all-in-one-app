@@ -14,6 +14,7 @@ import {
   formatBytes,
   formatJson,
   formatNumber,
+  getToolCode,
   generatePassword,
   hashText,
   hexToRgb,
@@ -45,6 +46,11 @@ describe('registry', () => {
       expect(categoryIds.has(t.category)).toBe(true);
       expect(t.platforms.length).toBeGreaterThan(0);
     }
+  });
+
+  it('numbers tools within their category', () => {
+    expect(getToolCode(tools.find((t) => t.id === 'pdf-merge')!)).toBe('PDF-02');
+    expect(getToolCode(tools[0]!)).toBe('IMG-01');
   });
 
   it('searches by name, keyword and multiple terms', () => {

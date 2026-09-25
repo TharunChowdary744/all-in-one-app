@@ -1,3 +1,4 @@
+import { Download } from 'lucide-react';
 import { qrToSvg, wifiQrPayload, type QrErrorCorrection } from '@omnikit/core';
 import { useMemo, useState } from 'react';
 
@@ -51,7 +52,7 @@ export default function QrGenerator() {
   return (
     <div className="split">
       <Card title="Content">
-        <Segmented value={mode} onChange={setMode} options={[{ value: 'text', label: '🔗 URL / Text' }, { value: 'wifi', label: '📶 Wi-Fi' }, { value: 'email', label: '✉️ Email' }, { value: 'phone', label: '📞 Phone' }]} />
+        <Segmented value={mode} onChange={setMode} options={[{ value: 'text', label: 'URL / Text' }, { value: 'wifi', label: 'Wi-Fi' }, { value: 'email', label: 'Email' }, { value: 'phone', label: 'Phone' }]} />
         <div className="stack">
           {mode === 'text' && (
             <Field label="URL or text">
@@ -90,8 +91,8 @@ export default function QrGenerator() {
           <>
             <div className="qr-preview" dangerouslySetInnerHTML={{ __html: svg.svg }} />
             <div className="actions center">
-              <button type="button" className="btn btn-primary" onClick={downloadPng}>⬇️ PNG</button>
-              <button type="button" className="btn btn-outline" onClick={() => downloadText(svg.svg, 'qr-code.svg', 'image/svg+xml')}>⬇️ SVG</button>
+              <button type="button" className="btn btn-primary" onClick={downloadPng}><Download size={14} /> PNG</button>
+              <button type="button" className="btn btn-outline" onClick={() => downloadText(svg.svg, 'qr-code.svg', 'image/svg+xml')}><Download size={14} /> SVG</button>
             </div>
           </>
         ) : (

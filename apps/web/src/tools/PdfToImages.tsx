@@ -1,3 +1,4 @@
+import { Download } from 'lucide-react';
 import { replaceExtension } from '@omnikit/core';
 import { useEffect, useRef, useState } from 'react';
 
@@ -70,11 +71,11 @@ export default function PdfToImages() {
         <Alert>{error}</Alert>
         <div className="actions">
           <button type="button" className="btn btn-primary" disabled={!file || !!progress} onClick={render}>
-            {progress ? <Spinner /> : '🖨️'} {progress || 'Convert to images'}
+            {progress && <Spinner />} {progress || 'Convert to images'}
           </button>
           {images.length > 1 && !progress && (
             <button type="button" className="btn btn-outline" onClick={() => zipAndDownload(images, replaceExtension(file!.name, 'images.zip'))}>
-              ⬇️ Download all (.zip)
+              <Download size={14} /> Download all (.zip)
             </button>
           )}
         </div>
@@ -85,7 +86,7 @@ export default function PdfToImages() {
             {images.map((img, i) => (
               <button key={img.url} type="button" className="thumb-tile" onClick={() => downloadBlob(img.blob, img.name)} title="Download">
                 <img src={img.url} alt={`Page ${i + 1}`} />
-                <span>Page {i + 1} ⬇️</span>
+                <span>Page {i + 1} <Download size={12} /></span>
               </button>
             ))}
           </div>

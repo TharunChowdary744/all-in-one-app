@@ -1,3 +1,4 @@
+import { Upload } from 'lucide-react';
 import { useRef, useState } from 'react';
 
 interface Props {
@@ -67,8 +68,14 @@ export function FileDrop({ accept, multiple = false, onFiles, title, hint, compa
           e.target.value = '';
         }}
       />
-      <div className="dropzone-icon">⬆️</div>
-      <div className="dropzone-title">{title ?? (multiple ? 'Drop files here or click to browse' : 'Drop a file here or click to browse')}</div>
+      <Upload className="dropzone-icon" size={22} strokeWidth={1.6} />
+      <div className="dropzone-title">
+        {title ?? (
+          <>
+            Drop {multiple ? 'files' : 'a file'} here or <u>browse</u>
+          </>
+        )}
+      </div>
       {hint && <div className="dropzone-hint">{hint}</div>}
       {rejected > 0 && <div className="dropzone-warn">{rejected} file(s) skipped — unsupported type</div>}
     </div>

@@ -1,7 +1,9 @@
-import { getCategory, getTool } from '@omnikit/core';
+import { getCategory, getTool, getToolCode } from '@omnikit/core';
+import { Star } from 'lucide-react';
 import { Suspense, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
+import { RegistryIcon } from '../components/Icon';
 import { Spinner } from '../components/ui';
 import { useAppState } from '../state/AppState';
 import { toolComponents } from '../tools';
@@ -30,16 +32,18 @@ export function ToolPage() {
   return (
     <div className="tool-page">
       <nav className="breadcrumb">
-        <Link to="/">Dashboard</Link> / <Link to={`/category/${category.id}`}>{category.name}</Link> / <span>{tool.name}</span>
+        <Link to="/">Index</Link> / <Link to={`/category/${category.id}`}>{category.name}</Link> / <span className="current">{getToolCode(tool)}</span>
       </nav>
-      <header className="page-header" style={{ '--accent': category.color } as React.CSSProperties}>
-        <div className="page-icon">{tool.icon}</div>
+      <header className="page-header">
+        <div className="page-icon">
+          <RegistryIcon name={tool.icon} size={26} />
+        </div>
         <div className="page-header-text">
           <h1>{tool.name}</h1>
           <p>{tool.description}</p>
         </div>
         <button type="button" className={`btn ${fav ? 'btn-primary' : 'btn-outline'}`} onClick={() => toggleFavorite(tool.id)} aria-pressed={fav}>
-          {fav ? '★ Favorited' : '☆ Favorite'}
+          <Star size={15} strokeWidth={1.6} fill={fav ? 'currentColor' : 'none'} /> {fav ? 'Starred' : 'Star'}
         </button>
       </header>
       <Suspense

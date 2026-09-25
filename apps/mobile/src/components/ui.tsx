@@ -1,5 +1,6 @@
 import * as Clipboard from 'expo-clipboard';
 import * as Haptics from 'expo-haptics';
+import { Check, Copy } from 'lucide-react-native';
 import { useState, type ReactNode } from 'react';
 import {
   ActivityIndicator,
@@ -9,7 +10,6 @@ import {
   ScrollView,
   StyleSheet,
   Switch,
-  Text,
   TextInput,
   View,
   type StyleProp,
@@ -17,7 +17,10 @@ import {
   type ViewStyle,
 } from 'react-native';
 
-import { mono, radius, spacing, useColors } from '@/theme/colors';
+import { Label, Text } from '@/components/Text';
+import { fonts, radius, spacing, useColors } from '@/theme/colors';
+
+export { Heading, Label, Text } from '@/components/Text';
 
 export function Screen({ children, scroll = true }: { children: ReactNode; scroll?: boolean }) {
   const c = useColors();
@@ -35,13 +38,14 @@ export function Screen({ children, scroll = true }: { children: ReactNode; scrol
   );
 }
 
+/** Panel with a hairline border and a monospace header rule. */
 export function Card({ title, right, children, style }: { title?: string; right?: ReactNode; children?: ReactNode; style?: StyleProp<ViewStyle> }) {
   const c = useColors();
   return (
-    <View style={[styles.card, { backgroundColor: c.surface, borderColor: c.border }, style]}>
+    <View style={[styles.card, { backgroundColor: c.surface, borderColor: c.line }, style]}>
       {(title || right) && (
-        <View style={styles.cardHeader}>
-          {title ? <Text style={[styles.cardTitle, { color: c.text }]}>{title}</Text> : <View />}
+        <View style={[styles.cardHeader, { borderColor: c.line }]}>
+          {title ? <Label style={{ color: c.ink, flex: 1 }}>{title}</Label> : <View />}
           {right}
         </View>
       )}
@@ -59,6 +63,7 @@ export function Button({
   disabled,
   loading,
   small,
+  icon,
   style,
 }: {
   label: string;
@@ -67,11 +72,12 @@ export function Button({
   disabled?: boolean;
   loading?: boolean;
   small?: boolean;
+  icon?: ReactNode;
   style?: StyleProp<ViewStyle>;
 }) {
   const c = useColors();
-  const bg = kind === 'primary' ? c.primary : kind === 'outline' ? c.surface : 'transparent';
-  const fg = kind === 'primary' ? c.onPrimary : kind === 'outline' ? c.text : c.text2;
+  const bg = kind === 'primary' ? c.ink : kind === 'outline' ? c.surface : 'transparent';
+  const fg = kind === 'primary' ? c.background : kind === 'outline' ? c.ink : c.ink2;
   return (
     <Pressable
       accessibilityRole="button"
@@ -80,12 +86,16 @@ export function Button({
       style={({ pressed }) => [
         styles.button,
         small && styles.buttonSmall,
-        { backgroundColor: bg, borderColor: kind === 'outline' ? c.border : 'transparent', opacity: disabled ? 0.5 : pressed ? 0.8 : 1 },
+        {
+          backgroundColor: pressed && kind === 'primary' ? c.accent : bg,
+          borderColor: kind === 'outline' ? (pressed ? c.ink : c.line) : 'transparent',
+          opacity: disabled ? 0.4 : 1,
+        },
         style,
       ]}
     >
-      {loading && <ActivityIndicator color={fg} size="small" />}
-      <Text style={[styles.buttonText, small && { fontSize: 13 }, { color: fg }]}>{label}</Text>
+      {loading ? <ActivityIndicator color={fg} size="small" /> : icon}
+      <Text style={{ fontFamily: fonts.sansMedium, fontSize: small ? 13 : 15, color: fg }}>{label}</Text>
     </Pressable>
   );
 }
@@ -93,7 +103,7 @@ export function Button({
 export function Segmented<T extends string | number>({ value, options, onChange }: { value: T; options: { value: T; label: string }[]; onChange: (v: T) => void }) {
   const c = useColors();
   return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={[styles.segmented, { backgroundColor: c.surface2 }]}>
+    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={[styles.segmented, { borderColor: c.line, backgroundColor: c.background }]}>
       {options.map((o) => {
         const active = o.value === value;
         return (
@@ -102,9 +112,9 @@ export function Segmented<T extends string | number>({ value, options, onChange 
             accessibilityRole="radio"
             accessibilityState={{ selected: active }}
             onPress={() => onChange(o.value)}
-            style={[styles.segment, active && { backgroundColor: c.surface, shadowOpacity: 0.08 }]}
+            style={[styles.segment, active && { backgroundColor: c.ink }]}
           >
-            <Text style={{ color: active ? c.text : c.text2, fontWeight: active ? '700' : '500', fontSize: 13 }}>{o.label}</Text>
+            <Text style={{ color: active ? c.background : c.ink2, fontSize: 13, fontFamily: active ? fonts.sansMedium : fonts.sans }}>{o.label}</Text>
           </Pressable>
         );
       })}
@@ -115,30 +125,29 @@ export function Segmented<T extends string | number>({ value, options, onChange 
 export function Chip({ label, active, onPress }: { label: string; active?: boolean; onPress: () => void }) {
   const c = useColors();
   return (
-    <Pressable
-      onPress={onPress}
-      style={[styles.chip, { backgroundColor: active ? c.primary : c.surface, borderColor: active ? c.primary : c.border }]}
-    >
-      <Text style={{ color: active ? c.onPrimary : c.text2, fontSize: 13, fontWeight: '600' }}>{label}</Text>
+    <Pressable onPress={onPress} style={[styles.chip, { backgroundColor: active ? c.ink : 'transparent', borderColor: active ? c.ink : c.line }]}>
+      <Text style={{ color: active ? c.background : c.ink2, fontSize: 13 }}>{label}</Text>
     </Pressable>
   );
 }
 
 export function Input({ label, multiline, code, style, ...props }: TextInputProps & { label?: string; code?: boolean }) {
   const c = useColors();
+  const [focused, setFocused] = useState(false);
   return (
     <View style={{ gap: 6 }}>
-      {label && <Text style={[styles.label, { color: c.text2 }]}>{label}</Text>}
+      {label && <Label style={{ color: c.ink2 }}>{label}</Label>}
       <TextInput
         placeholderTextColor={c.muted}
         multiline={multiline}
         autoCorrect={!code}
         autoCapitalize={code ? 'none' : props.autoCapitalize}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
         style={[
           styles.input,
-          { color: c.text, backgroundColor: c.surface, borderColor: c.border },
+          { color: c.ink, backgroundColor: c.surface, borderColor: focused ? c.ink : c.line, fontFamily: code ? fonts.mono : fonts.sans },
           multiline && { minHeight: 120, textAlignVertical: 'top' },
-          code && mono,
           style,
         ]}
         {...props}
@@ -151,19 +160,21 @@ export function Toggle({ label, value, onChange }: { label: string; value: boole
   const c = useColors();
   return (
     <View style={styles.toggle}>
-      <Text style={{ color: c.text, flex: 1 }}>{label}</Text>
-      <Switch value={value} onValueChange={onChange} trackColor={{ true: c.primary, false: c.border }} />
+      <Text style={{ flex: 1, fontSize: 15 }}>{label}</Text>
+      <Switch value={value} onValueChange={onChange} trackColor={{ true: c.ink, false: c.line }} thumbColor={value ? c.accent : c.surface} />
     </View>
   );
 }
 
 export function CopyButton({ text, label = 'Copy' }: { text: string; label?: string }) {
+  const c = useColors();
   const [copied, setCopied] = useState(false);
   return (
     <Button
       small
       kind="ghost"
-      label={copied ? '✓ Copied' : label}
+      label={copied ? 'Copied' : label}
+      icon={copied ? <Check size={14} color={c.good} /> : <Copy size={14} color={c.ink2} strokeWidth={1.6} />}
       disabled={!text}
       onPress={async () => {
         await Clipboard.setStringAsync(text);
@@ -175,13 +186,14 @@ export function CopyButton({ text, label = 'Copy' }: { text: string; label?: str
   );
 }
 
-export function ResultRow({ label, value, selectable = true }: { label: string; value: string; selectable?: boolean }) {
+/** Label / value row separated by hairlines. */
+export function ResultRow({ label, value }: { label: string; value: string }) {
   const c = useColors();
   return (
-    <View style={[styles.resultRow, { backgroundColor: c.surface2, borderColor: c.border }]}>
-      <View style={{ flex: 1, gap: 2 }}>
-        <Text style={[styles.label, { color: c.text2 }]}>{label}</Text>
-        <Text selectable={selectable} style={[mono, { color: c.text, fontSize: 14 }]}>
+    <View style={[styles.resultRow, { borderColor: c.line }]}>
+      <View style={{ flex: 1, gap: 3 }}>
+        <Label style={{ color: c.ink2 }}>{label}</Label>
+        <Text selectable style={{ fontFamily: fonts.mono, fontSize: 14 }}>
           {value || '—'}
         </Text>
       </View>
@@ -193,31 +205,37 @@ export function ResultRow({ label, value, selectable = true }: { label: string; 
 export function Output({ value, placeholder = 'Output appears here' }: { value: string; placeholder?: string }) {
   const c = useColors();
   return (
-    <View style={[styles.output, { backgroundColor: c.surface2, borderColor: c.border }]}>
-      <Text selectable style={[mono, { color: value ? c.text : c.muted, fontSize: 13 }]}>
+    <View style={[styles.output, { backgroundColor: c.background, borderColor: c.line }]}>
+      <Text selectable style={{ fontFamily: fonts.mono, color: value ? c.ink : c.muted, fontSize: 13, lineHeight: 20 }}>
         {value || placeholder}
       </Text>
     </View>
   );
 }
 
+/** Ledger cell: big display numeral over a mono label. */
 export function Stat({ label, value }: { label: string; value: string | number }) {
   const c = useColors();
   return (
-    <View style={[styles.stat, { backgroundColor: c.surface, borderColor: c.border }]}>
-      <Text style={{ color: c.text, fontSize: 22, fontWeight: '800' }}>{value}</Text>
-      <Text style={{ color: c.muted, fontSize: 12 }}>{label}</Text>
+    <View style={[styles.stat, { borderColor: c.line }]}>
+      <Text style={{ fontFamily: fonts.displaySemi, fontSize: 28, letterSpacing: -0.8, lineHeight: 30 }}>{value}</Text>
+      <Label>{label}</Label>
     </View>
   );
+}
+
+export function StatGrid({ children }: { children: ReactNode }) {
+  const c = useColors();
+  return <View style={[styles.statGrid, { borderColor: c.ink }]}>{children}</View>;
 }
 
 export function Notice({ kind = 'error', children }: { kind?: 'error' | 'info' | 'success'; children?: ReactNode }) {
   const c = useColors();
   if (!children) return null;
-  const color = kind === 'error' ? c.bad : kind === 'success' ? c.good : c.text2;
+  const color = kind === 'error' ? c.bad : kind === 'success' ? c.good : c.ink2;
   return (
-    <View style={[styles.notice, { backgroundColor: kind === 'info' ? c.primarySoft : c.surface2, borderColor: color }]}>
-      <Text style={{ color }}>{children}</Text>
+    <View style={[styles.notice, { borderColor: kind === 'info' ? c.muted : color, backgroundColor: c.surface }]}>
+      <Text style={{ color, fontSize: 14 }}>{children}</Text>
     </View>
   );
 }
@@ -232,22 +250,20 @@ export function Muted({ children }: { children: ReactNode }) {
 }
 
 const styles = StyleSheet.create({
-  screen: { padding: spacing.lg, gap: spacing.lg, paddingBottom: 48 },
-  card: { borderWidth: 1, borderRadius: radius.md, padding: spacing.lg, gap: spacing.md },
-  cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: spacing.sm },
-  cardTitle: { fontSize: 16, fontWeight: '700' },
-  button: { flexDirection: 'row', gap: 8, alignItems: 'center', justifyContent: 'center', borderRadius: radius.sm, paddingVertical: 12, paddingHorizontal: 18, borderWidth: 1 },
-  buttonSmall: { paddingVertical: 6, paddingHorizontal: 10 },
-  buttonText: { fontWeight: '700', fontSize: 15 },
-  segmented: { flexDirection: 'row', borderRadius: 11, padding: 3, gap: 2 },
-  segment: { paddingVertical: 8, paddingHorizontal: 14, borderRadius: 8, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowRadius: 3, shadowOpacity: 0 },
-  chip: { borderWidth: 1, borderRadius: 99, paddingHorizontal: 14, paddingVertical: 7 },
-  label: { fontSize: 12, fontWeight: '600' },
-  input: { borderWidth: 1, borderRadius: radius.sm, paddingHorizontal: 12, paddingVertical: 10, fontSize: 15 },
-  toggle: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
-  resultRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, borderWidth: 1, borderRadius: radius.sm, padding: spacing.md },
+  screen: { padding: spacing.lg, gap: spacing.lg, paddingBottom: 56 },
+  card: { borderWidth: StyleSheet.hairlineWidth * 2, borderRadius: radius.md, padding: spacing.lg, gap: spacing.md },
+  cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: spacing.sm, paddingBottom: spacing.sm, borderBottomWidth: 1, minHeight: 30 },
+  button: { flexDirection: 'row', gap: 8, alignItems: 'center', justifyContent: 'center', borderRadius: radius.sm, height: 46, paddingHorizontal: 18, borderWidth: 1 },
+  buttonSmall: { height: 32, paddingHorizontal: 10, gap: 6 },
+  segmented: { flexDirection: 'row', borderRadius: radius.sm, borderWidth: 1, padding: 2, gap: 2 },
+  segment: { paddingVertical: 7, paddingHorizontal: 13, borderRadius: 3 },
+  chip: { borderWidth: 1, borderRadius: 99, paddingHorizontal: 13, paddingVertical: 6 },
+  input: { borderWidth: 1, borderRadius: radius.sm, paddingHorizontal: 12, paddingVertical: 11, fontSize: 15 },
+  toggle: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, minHeight: 36 },
+  resultRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, paddingVertical: 10, borderBottomWidth: 1 },
   output: { borderWidth: 1, borderRadius: radius.sm, padding: spacing.md, minHeight: 80 },
-  stat: { flexGrow: 1, flexBasis: '22%', minWidth: 76, borderWidth: 1, borderRadius: radius.md, padding: spacing.md },
-  notice: { borderLeftWidth: 4, borderRadius: radius.sm, padding: spacing.md },
+  statGrid: { flexDirection: 'row', flexWrap: 'wrap', borderTopWidth: 1 },
+  stat: { width: '50%', paddingVertical: 12, paddingRight: 12, gap: 4, borderBottomWidth: 1 },
+  notice: { borderLeftWidth: 3, borderRadius: radius.sm, padding: spacing.md },
   row: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, alignItems: 'center' },
 });

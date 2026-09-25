@@ -40,7 +40,7 @@ export default function HashGenerator() {
         </>
       ) : (
         <>
-          <Button label="📂 Choose a file" onPress={pickFile} loading={busy} />
+          <Button label="Choose a file" onPress={pickFile} loading={busy} />
           <Notice>{error}</Notice>
           {fileResult && (
             <>

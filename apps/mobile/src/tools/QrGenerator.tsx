@@ -37,7 +37,7 @@ export default function QrGenerator() {
 
   return (
     <Screen>
-      <Segmented value={mode} onChange={setMode} options={[{ value: 'text', label: '🔗 URL / Text' }, { value: 'wifi', label: '📶 Wi-Fi' }, { value: 'phone', label: '📞 Phone' }]} />
+      <Segmented value={mode} onChange={setMode} options={[{ value: 'text', label: 'URL / Text' }, { value: 'wifi', label: 'Wi-Fi' }, { value: 'phone', label: 'Phone' }]} />
       {mode === 'text' && <Input label="URL or text" multiline value={text} onChangeText={setText} autoCapitalize="none" style={{ minHeight: 80 }} />}
       {mode === 'wifi' && (
         <>

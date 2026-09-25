@@ -1,3 +1,4 @@
+import { Download } from 'lucide-react';
 import { replaceExtension } from '@omnikit/core';
 import { useState } from 'react';
 
@@ -91,7 +92,7 @@ export default function PdfToWord() {
                 .txt
               </button>
               <button type="button" className="btn btn-primary btn-sm" disabled={busy || wordCount === 0} onClick={download}>
-                ⬇️ Download .docx
+                <Download size={14} /> Download .docx
               </button>
             </>
           }

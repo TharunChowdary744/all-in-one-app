@@ -1,13 +1,14 @@
 import { formatBytes, replaceExtension } from '@omnikit/core';
 import { Image } from 'expo-image';
 import { useState } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
 import { Button, Card, Muted, Notice, Screen, Segmented } from '@/components/ui';
 import { errorMessage, shareUri } from '@/lib/files';
 import { outputFormats, pickImages, processImage, type PickedImage, type ProcessedImage } from '@/lib/images';
 import { useAppState } from '@/state/AppState';
 import { radius, useColors } from '@/theme/colors';
+import { Text } from '@/components/Text';
 
 interface Item {
   source: PickedImage;
@@ -46,7 +47,7 @@ export default function ImageConverter() {
 
   return (
     <Screen>
-      <Button label={items.length ? `📷 ${items.length} selected — pick again` : '📷 Choose images'} kind={items.length ? 'outline' : 'primary'} onPress={() => pick().catch(() => undefined)} />
+      <Button label={items.length ? `${items.length} selected — pick again` : 'Choose images'} kind={items.length ? 'outline' : 'primary'} onPress={() => pick().catch(() => undefined)} />
       <Card title="Convert to">
         <Segmented value={fmtIdx} onChange={setFmtIdx} options={outputFormats.map((f, i) => ({ value: i, label: f.label }))} />
         {target.label !== 'PNG' && (
@@ -55,14 +56,14 @@ export default function ImageConverter() {
             <Segmented value={quality} onChange={setQuality} options={[0.5, 0.7, 0.85, 1].map((q) => ({ value: q, label: `${Math.round(q * 100)}%` }))} />
           </>
         )}
-        <Button label={`⚡ Convert to ${target.label}`} onPress={convert} disabled={!items.length} loading={busy} />
+        <Button label={`Convert to ${target.label}`} onPress={convert} disabled={!items.length} loading={busy} />
       </Card>
       {items.map((item, i) => (
         <Card key={`${item.source.uri}-${i}`}>
           <View style={{ flexDirection: 'row', gap: 12, alignItems: 'center' }}>
             <Image source={{ uri: item.result?.uri ?? item.source.uri }} style={{ width: 64, height: 64, borderRadius: radius.sm }} contentFit="cover" />
             <View style={{ flex: 1, gap: 2 }}>
-              <Text numberOfLines={1} style={{ color: c.text, fontWeight: '700' }}>
+              <Text numberOfLines={1} style={{ color: c.ink, fontWeight: '700' }}>
                 {item.result ? replaceExtension(item.source.name, target.ext) : item.source.name}
               </Text>
               <Text style={{ color: c.muted, fontSize: 12 }}>

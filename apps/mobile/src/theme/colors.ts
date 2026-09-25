@@ -1,37 +1,36 @@
 import { useColorScheme } from 'react-native';
 
+// "Workbench catalog" palette — warm paper, ink, one signal-orange accent. Mirrors apps/web/src/styles.css.
 const light = {
-  background: '#f6f7fb',
-  surface: '#ffffff',
-  surface2: '#f1f3f9',
-  border: '#e4e7f0',
-  text: '#151826',
-  text2: '#5b6178',
-  muted: '#8a90a6',
-  primary: '#6d5dfc',
-  primaryDark: '#4f46e5',
-  primarySoft: '#efedff',
-  good: '#059669',
-  bad: '#dc2626',
-  onPrimary: '#ffffff',
+  background: '#f3f0e8',
+  surface: '#faf8f3',
+  surface2: '#ebe7dc',
+  line: '#d9d3c4',
+  ink: '#1c1b17',
+  ink2: '#57544a',
+  muted: '#8a8577',
+  accent: '#e0531f',
+  accentInk: '#ffffff',
+  accentSoft: '#f6dccd',
+  good: '#3d7a4a',
+  bad: '#c0352b',
 };
 
 export type Palette = typeof light;
 
 const dark: Palette = {
-  background: '#0d0f17',
-  surface: '#151826',
-  surface2: '#1c2031',
-  border: '#272c40',
-  text: '#eef0f8',
-  text2: '#b0b5c9',
-  muted: '#7c8299',
-  primary: '#8b7bff',
-  primaryDark: '#6d5dfc',
-  primarySoft: '#221f45',
-  good: '#34d399',
-  bad: '#f87171',
-  onPrimary: '#ffffff',
+  background: '#141310',
+  surface: '#1b1a16',
+  surface2: '#24221d',
+  line: '#333029',
+  ink: '#efebe0',
+  ink2: '#b7b2a4',
+  muted: '#7f7a6c',
+  accent: '#ff6a33',
+  accentInk: '#141310',
+  accentSoft: '#3a2318',
+  good: '#7fb88a',
+  bad: '#ef6b5f',
 };
 
 export function useColors(): Palette {
@@ -42,6 +41,17 @@ export function useIsDark(): boolean {
   return useColorScheme() === 'dark';
 }
 
-export const radius = { sm: 10, md: 14, lg: 20 };
+/** Font family names registered in the root layout via expo-font. */
+export const fonts = {
+  display: 'BricolageGrotesque_700Bold',
+  displaySemi: 'BricolageGrotesque_600SemiBold',
+  sans: 'IBMPlexSans_400Regular',
+  sansMedium: 'IBMPlexSans_500Medium',
+  sansSemi: 'IBMPlexSans_600SemiBold',
+  mono: 'IBMPlexMono_400Regular',
+  monoMedium: 'IBMPlexMono_500Medium',
+};
+
+export const radius = { sm: 4, md: 6 };
 export const spacing = { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 };
-export const mono = { fontFamily: 'monospace' as const };
+export const mono = { fontFamily: fonts.mono };

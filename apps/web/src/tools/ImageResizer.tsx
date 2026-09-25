@@ -1,3 +1,4 @@
+import { Download, Lock, LockOpen } from 'lucide-react';
 import { formatBytes, replaceExtension } from '@omnikit/core';
 import { useEffect, useState } from 'react';
 
@@ -78,7 +79,7 @@ export default function ImageResizer() {
               <input type="number" min={1} max={20000} value={width} onChange={(e) => setW(Number(e.target.value))} />
             </Field>
             <button type="button" className={`icon-btn lock ${lock ? 'active' : ''}`} onClick={() => setLock(!lock)} aria-pressed={lock} title="Lock aspect ratio">
-              {lock ? '🔒' : '🔓'}
+              {lock ? <Lock size={15} /> : <LockOpen size={15} />}
             </button>
             <Field label="Height (px)">
               <input type="number" min={1} max={20000} value={height} onChange={(e) => setH(Number(e.target.value))} />
@@ -103,7 +104,7 @@ export default function ImageResizer() {
           </div>
           <div className="actions">
             <button type="button" className="btn btn-primary" onClick={run} disabled={busy || width < 1 || height < 1}>
-              {busy ? <Spinner /> : '📐'} Resize image
+              {busy && <Spinner />} Resize image
             </button>
           </div>
         </Card>
@@ -114,7 +115,7 @@ export default function ImageResizer() {
           title="Result"
           actions={
             <button type="button" className="btn btn-primary btn-sm" onClick={() => downloadBlob(result.blob, replaceExtension(file.name, `${width}x${height}.${target.ext}`))}>
-              ⬇️ Download
+              <Download size={14} /> Download
             </button>
           }
         >

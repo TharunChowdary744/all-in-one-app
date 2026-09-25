@@ -9,7 +9,6 @@ export interface Unit {
 export interface UnitGroup {
   id: string;
   name: string;
-  icon: string;
   units: Unit[];
 }
 
@@ -19,7 +18,6 @@ export const unitGroups: UnitGroup[] = [
   {
     id: 'length',
     name: 'Length',
-    icon: '📏',
     units: [
       u('mm', 'Millimeter', 'mm', 0.001),
       u('cm', 'Centimeter', 'cm', 0.01),
@@ -35,7 +33,6 @@ export const unitGroups: UnitGroup[] = [
   {
     id: 'mass',
     name: 'Weight',
-    icon: '⚖️',
     units: [
       u('mg', 'Milligram', 'mg', 0.000001),
       u('g', 'Gram', 'g', 0.001),
@@ -49,13 +46,11 @@ export const unitGroups: UnitGroup[] = [
   {
     id: 'temperature',
     name: 'Temperature',
-    icon: '🌡️',
     units: [u('c', 'Celsius', '°C', 1), u('f', 'Fahrenheit', '°F', 1), u('k', 'Kelvin', 'K', 1)],
   },
   {
     id: 'area',
     name: 'Area',
-    icon: '⬛',
     units: [
       u('cm2', 'Square centimeter', 'cm²', 0.0001),
       u('m2', 'Square meter', 'm²', 1),
@@ -69,7 +64,6 @@ export const unitGroups: UnitGroup[] = [
   {
     id: 'volume',
     name: 'Volume',
-    icon: '🧪',
     units: [
       u('ml', 'Milliliter', 'ml', 0.001),
       u('l', 'Liter', 'L', 1),
@@ -84,7 +78,6 @@ export const unitGroups: UnitGroup[] = [
   {
     id: 'speed',
     name: 'Speed',
-    icon: '🚀',
     units: [
       u('mps', 'Meters per second', 'm/s', 1),
       u('kph', 'Kilometers per hour', 'km/h', 1 / 3.6),
@@ -95,7 +88,6 @@ export const unitGroups: UnitGroup[] = [
   {
     id: 'data',
     name: 'Data',
-    icon: '💾',
     units: [
       u('b', 'Byte', 'B', 1),
       u('kb', 'Kilobyte', 'KB', 1e3),
@@ -111,7 +103,6 @@ export const unitGroups: UnitGroup[] = [
   {
     id: 'time',
     name: 'Time',
-    icon: '⏳',
     units: [
       u('ms', 'Millisecond', 'ms', 0.001),
       u('s', 'Second', 's', 1),

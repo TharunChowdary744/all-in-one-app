@@ -1,4 +1,5 @@
 import { getTool } from '@omnikit/core';
+import { Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 import { ToolCard } from '../components/ToolCard';
@@ -9,19 +10,25 @@ export function FavoritesPage() {
   const list = favorites.map(getTool).filter((t) => t !== undefined);
   return (
     <div>
+      <nav className="breadcrumb">
+        <Link to="/">Index</Link> / <span className="current">Starred</span>
+      </nav>
       <header className="page-header">
-        <div className="page-icon">⭐</div>
-        <div>
-          <h1>Favorites</h1>
-          <p>Tools you've starred for quick access.</p>
+        <div className="page-icon">
+          <Star size={26} strokeWidth={1.6} />
+        </div>
+        <div className="page-header-text">
+          <h1>Starred</h1>
+          <p>The tools you reach for most, one click away.</p>
         </div>
       </header>
       {list.length === 0 ? (
         <div className="empty">
-          No favorites yet. Tap the ☆ on any tool card to pin it here. <Link to="/" className="link">Browse tools</Link>
+          <p>Nothing starred yet. Use the star on any tool to keep it here.</p>
+          <Link to="/" className="btn btn-outline">Browse all tools</Link>
         </div>
       ) : (
-        <div className="grid">{list.map((t) => <ToolCard key={t.id} tool={t} />)}</div>
+        <div className="catalog">{list.map((t) => <ToolCard key={t.id} tool={t} />)}</div>
       )}
     </div>
   );

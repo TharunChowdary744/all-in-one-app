@@ -1,11 +1,12 @@
 import { Tabs } from 'expo-router/js-tabs';
-import { Text } from 'react-native';
+import { Info, LayoutGrid, Search, Star, type LucideIcon } from 'lucide-react-native';
+import type { ColorValue } from 'react-native';
 
-import { useColors } from '@/theme/colors';
+import { fonts, useColors } from '@/theme/colors';
 
-const icon = (emoji: string) =>
-  function TabIcon({ focused }: { focused: boolean }) {
-    return <Text style={{ fontSize: 20, opacity: focused ? 1 : 0.55 }}>{emoji}</Text>;
+const icon = (Icon: LucideIcon) =>
+  function TabIcon({ color }: { color: ColorValue }) {
+    return <Icon size={21} color={color as string} strokeWidth={1.6} />;
   };
 
 export default function TabsLayout() {
@@ -13,19 +14,22 @@ export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: c.primary,
+        tabBarActiveTintColor: c.ink,
         tabBarInactiveTintColor: c.muted,
-        tabBarStyle: { backgroundColor: c.surface, borderTopColor: c.border },
-        headerStyle: { backgroundColor: c.surface },
-        headerTintColor: c.text,
-        headerTitleStyle: { fontWeight: '800' },
+        tabBarStyle: { backgroundColor: c.background, borderTopColor: c.line },
+        tabBarLabelStyle: { fontFamily: fonts.monoMedium, fontSize: 10, letterSpacing: 0.8, textTransform: 'uppercase' },
+        headerStyle: { backgroundColor: c.background },
+        headerShadowVisible: false,
+        headerTintColor: c.ink,
+        headerTitleStyle: { fontFamily: fonts.displaySemi, fontSize: 18 },
+        headerTitleAlign: 'left',
         sceneStyle: { backgroundColor: c.background },
       }}
     >
-      <Tabs.Screen name="index" options={{ title: 'OmniKit', tabBarLabel: 'Home', tabBarIcon: icon('🏠') }} />
-      <Tabs.Screen name="tools" options={{ title: 'All tools', tabBarLabel: 'Tools', tabBarIcon: icon('🧰') }} />
-      <Tabs.Screen name="favorites" options={{ title: 'Favorites', tabBarIcon: icon('⭐') }} />
-      <Tabs.Screen name="about" options={{ title: 'About', tabBarIcon: icon('ℹ️') }} />
+      <Tabs.Screen name="index" options={{ title: 'Index', headerShown: false, tabBarIcon: icon(LayoutGrid) }} />
+      <Tabs.Screen name="tools" options={{ title: 'Find', headerTitle: 'Find a tool', tabBarIcon: icon(Search) }} />
+      <Tabs.Screen name="favorites" options={{ title: 'Starred', tabBarIcon: icon(Star) }} />
+      <Tabs.Screen name="about" options={{ title: 'About', tabBarIcon: icon(Info) }} />
     </Tabs>
   );
 }

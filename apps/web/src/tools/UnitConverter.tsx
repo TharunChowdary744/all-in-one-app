@@ -1,3 +1,4 @@
+import { ArrowLeftRight } from 'lucide-react';
 import { convertUnit, formatNumber, unitGroups } from '@omnikit/core';
 import { useState } from 'react';
 
@@ -27,7 +28,7 @@ export default function UnitConverter() {
       <div className="chips-row">
         {unitGroups.map((g) => (
           <button key={g.id} type="button" className={`filter-chip ${g.id === groupId ? 'active' : ''}`} onClick={() => pickGroup(g.id)}>
-            {g.icon} {g.name}
+            {g.name}
           </button>
         ))}
       </div>
@@ -39,7 +40,7 @@ export default function UnitConverter() {
               {group.units.map((u) => <option key={u.id} value={u.id}>{u.name} ({u.symbol})</option>)}
             </select>
           </div>
-          <button type="button" className="icon-btn swap" aria-label="Swap units" onClick={() => { setFrom(to); setTo(from); }}>⇄</button>
+          <button type="button" className="icon-btn swap" aria-label="Swap units" onClick={() => { setFrom(to); setTo(from); }}><ArrowLeftRight size={18} /></button>
           <div className="converter-side">
             <output className="big-output">{result || '—'}</output>
             <select value={to} onChange={(e) => setTo(e.target.value)} aria-label="To unit">

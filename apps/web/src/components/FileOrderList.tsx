@@ -1,4 +1,5 @@
 import { formatBytes } from '@omnikit/core';
+import { ArrowDown, ArrowUp, X } from 'lucide-react';
 import type { ReactNode } from 'react';
 
 /** Reorderable list of files (used by merge / images-to-pdf). */
@@ -24,20 +25,20 @@ export function FileOrderList<T extends { file: File }>({
     <ul className="file-list">
       {items.map((item, i) => (
         <li key={getKey(item)} className="file-row">
-          <span className="order">{i + 1}</span>
+          <span className="order">{String(i + 1).padStart(2, '0')}</span>
           {renderThumb?.(item)}
           <div className="file-info">
             <div className="file-name">{item.file.name}</div>
             <div className="file-meta">{formatBytes(item.file.size)}</div>
           </div>
-          <button type="button" className="icon-btn" aria-label="Move up" disabled={i === 0} onClick={() => move(i, i - 1)}>
-            ↑
+          <button type="button" className="icon-btn plain" aria-label="Move up" disabled={i === 0} onClick={() => move(i, i - 1)}>
+            <ArrowUp size={15} />
           </button>
-          <button type="button" className="icon-btn" aria-label="Move down" disabled={i === items.length - 1} onClick={() => move(i, i + 1)}>
-            ↓
+          <button type="button" className="icon-btn plain" aria-label="Move down" disabled={i === items.length - 1} onClick={() => move(i, i + 1)}>
+            <ArrowDown size={15} />
           </button>
-          <button type="button" className="icon-btn" aria-label="Remove" onClick={() => onChange(items.filter((_, k) => k !== i))}>
-            ✕
+          <button type="button" className="icon-btn plain" aria-label="Remove" onClick={() => onChange(items.filter((_, k) => k !== i))}>
+            <X size={15} />
           </button>
         </li>
       ))}

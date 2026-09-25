@@ -1,3 +1,4 @@
+import { Download } from 'lucide-react';
 import { htmlDocument, markdownToHtml } from '@omnikit/core';
 import { useMemo, useState } from 'react';
 
@@ -5,7 +6,7 @@ import { Card, CopyButton, Segmented } from '../components/ui';
 import { downloadText } from '../lib/files';
 import { sanitizeHtml } from '../lib/sanitize';
 
-const SAMPLE = `# Welcome to OmniKit ✨
+const SAMPLE = `# Welcome to OmniKit
 
 Write **Markdown** on the left and see the result instantly.
 
@@ -40,7 +41,7 @@ export default function MarkdownToHtml() {
           <>
             <CopyButton text={html} label="Copy HTML" />
             <button type="button" className="btn btn-primary btn-sm" onClick={() => downloadText(htmlDocument(html), 'document.html', 'text/html')}>
-              ⬇️ .html
+              <Download size={14} /> .html
             </button>
           </>
         }

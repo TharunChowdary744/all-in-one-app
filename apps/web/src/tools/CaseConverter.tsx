@@ -1,3 +1,4 @@
+import { ArrowUp } from 'lucide-react';
 import { caseStyles, convertCase } from '@omnikit/core';
 import { useState } from 'react';
 
@@ -19,7 +20,7 @@ export default function CaseConverter() {
               <code className="result-value">{out || '—'}</code>
               <CopyButton text={out} />
               <button type="button" className="btn btn-ghost btn-sm" onClick={() => setText(out)} title="Use as input">
-                ↺
+                <ArrowUp size={14} />
               </button>
             </div>
           );

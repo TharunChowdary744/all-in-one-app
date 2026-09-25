@@ -54,7 +54,7 @@ export default function HashGenerator() {
               const match = cmp && hashes[a.id] === cmp;
               return (
                 <div key={a.id} className={`result-row ${match ? 'match' : ''}`}>
-                  <div className="result-label">{a.label}{match && ' ✓'}</div>
+                  <div className="result-label">{a.label}{match && ' · match'}</div>
                   <code className="result-value break">{v}</code>
                   <CopyButton text={v} />
                 </div>
@@ -62,7 +62,7 @@ export default function HashGenerator() {
             })}
           </div>
           <input value={compare} onChange={(e) => setCompare(e.target.value)} placeholder="Paste an expected hash to verify…" aria-label="Compare hash" />
-          {cmp && <p className={Object.values(hashes).includes(cmp) ? 'good' : 'bad'}>{Object.values(hashes).includes(cmp) ? '✓ Match found' : '✗ No match'}</p>}
+          {cmp && <p className={Object.values(hashes).includes(cmp) ? 'good' : 'bad'}>{Object.values(hashes).includes(cmp) ? 'Match found' : 'No match'}</p>}
         </Card>
       )}
     </div>

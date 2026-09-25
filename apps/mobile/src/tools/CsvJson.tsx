@@ -31,7 +31,7 @@ export default function CsvJson() {
       <Segmented value={direction} onChange={(d) => { if (output) setInput(output); setDirection(d); }} options={[{ value: 'csv2json', label: 'CSV → JSON' }, { value: 'json2csv', label: 'JSON → CSV' }]} />
       {direction === 'csv2json' && <Toggle label="First row is header" value={header} onChange={setHeader} />}
       <Input label={direction === 'csv2json' ? 'CSV' : 'JSON'} multiline code value={input} onChangeText={setInput} style={{ minHeight: 160 }} />
-      <Button kind="outline" label="📂 Open file" onPress={() => openFile().catch(() => undefined)} />
+      <Button kind="outline" label="Open file" onPress={() => openFile().catch(() => undefined)} />
       <Notice>{error}</Notice>
       <Card
         title={direction === 'csv2json' ? 'JSON' : 'CSV'}

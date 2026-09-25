@@ -1,3 +1,4 @@
+import { Download, FolderOpen } from 'lucide-react';
 import { csvToJson, jsonToCsv } from '@omnikit/core';
 import { useMemo, useState } from 'react';
 
@@ -58,7 +59,7 @@ export default function CsvJson() {
           title={direction === 'csv2json' ? 'CSV input' : 'JSON input'}
           actions={
             <label className="btn btn-ghost btn-sm">
-              📂 Open file
+              <FolderOpen size={14} /> Open file
               <input type="file" hidden accept={direction === 'csv2json' ? '.csv,.tsv,.txt,text/csv' : '.json,application/json'} onChange={(e) => e.target.files?.[0] && readFile(e.target.files[0])} />
             </label>
           }
@@ -76,7 +77,7 @@ export default function CsvJson() {
                 disabled={!result.output}
                 onClick={() => (direction === 'csv2json' ? downloadText(result.output, 'data.json', 'application/json') : downloadText(result.output, 'data.csv', 'text/csv'))}
               >
-                ⬇️ Download
+                <Download size={14} /> Download
               </button>
             </>
           }

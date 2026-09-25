@@ -1,9 +1,10 @@
 import { colorScale, formatHsl, formatRgb, parseColor, readableTextColor, rgbToHex, rgbToHsl } from '@omnikit/core';
 import { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import { Card, Input, Notice, ResultRow, Screen } from '@/components/ui';
-import { mono, radius } from '@/theme/colors';
+import { fonts, radius } from '@/theme/colors';
+import { Text } from '@/components/Text';
 
 const PRESETS = ['#6d5dfc', '#ef4444', '#f59e0b', '#10b981', '#06b6d4', '#3b82f6', '#ec4899', '#111827'];
 
@@ -22,7 +23,7 @@ export default function ColorConverter() {
       {rgb && (
         <>
           <View style={{ backgroundColor: rgbToHex(rgb), borderRadius: radius.md, padding: 28 }}>
-            <Text style={[mono, { color: readableTextColor(rgb), fontSize: 26, fontWeight: '800' }]}>{rgbToHex(rgb).toUpperCase()}</Text>
+            <Text style={{ fontFamily: fonts.display, color: readableTextColor(rgb), fontSize: 34, letterSpacing: -1 }}>{rgbToHex(rgb).toUpperCase()}</Text>
           </View>
           <ResultRow label="HEX" value={rgbToHex(rgb)} />
           <ResultRow label="RGB" value={formatRgb(rgb)} />

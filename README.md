@@ -35,6 +35,10 @@ Both apps share one tool registry and all pure conversion logic through `@omniki
 - Category browsing, featured tools and "Web only" badges
 - Light and dark themes (the web app follows the system or a manual toggle), responsive down to phone width
 
+## Design
+
+OmniKit uses a "workbench catalog" look: warm paper (`#f3f0e8`), ink (`#1c1b17`) and a single signal-orange accent (`#e0531f`), with flat surfaces separated by hairlines. Type is **Bricolage Grotesque** (display), **IBM Plex Sans** (text) and **IBM Plex Mono** (labels). The fonts are bundled with both apps, so nothing loads from a font CDN. Every tool has a catalog code such as `PDF-03`, and icons come from [Lucide](https://lucide.dev). The same tokens are defined in `apps/web/src/styles.css` and `apps/mobile/src/theme/colors.ts`.
+
 ## Repository layout
 
 ```

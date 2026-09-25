@@ -1,3 +1,4 @@
+import { Download } from 'lucide-react';
 import { htmlDocument, replaceExtension } from '@omnikit/core';
 import { useState } from 'react';
 
@@ -60,10 +61,10 @@ export default function WordToHtml() {
             <>
               <CopyButton text={view === 'text' ? text : html} />
               <button type="button" className="btn btn-outline btn-sm" onClick={() => downloadText(text, replaceExtension(file.name, 'txt'))}>
-                ⬇️ .txt
+                <Download size={14} /> .txt
               </button>
               <button type="button" className="btn btn-primary btn-sm" onClick={() => downloadText(htmlDocument(html, title), replaceExtension(file.name, 'html'), 'text/html')}>
-                ⬇️ .html
+                <Download size={14} /> .html
               </button>
             </>
           }

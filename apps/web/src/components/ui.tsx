@@ -1,3 +1,4 @@
+import { Check, Copy } from 'lucide-react';
 import { useState, type ReactNode } from 'react';
 
 export function Card({ title, actions, children, className = '' }: { title?: ReactNode; actions?: ReactNode; children: ReactNode; className?: string }) {
@@ -60,7 +61,8 @@ export function CopyButton({ text, label = 'Copy', className = '' }: { text: str
         }
       }}
     >
-      {copied ? '✓ Copied' : label}
+      {copied ? <Check size={14} /> : <Copy size={14} strokeWidth={1.6} />}
+      {copied ? 'Copied' : label}
     </button>
   );
 }

@@ -1,9 +1,9 @@
 import { describeTimestamp, parseTimestamp } from '@omnikit/core';
 import { useEffect, useState } from 'react';
-import { Text } from 'react-native';
 
 import { Button, Card, Input, Notice, ResultRow, Screen } from '@/components/ui';
-import { mono, useColors } from '@/theme/colors';
+import { fonts, useColors } from '@/theme/colors';
+import { Text } from '@/components/Text';
 
 export default function TimestampConverter() {
   const c = useColors();
@@ -18,8 +18,8 @@ export default function TimestampConverter() {
   return (
     <Screen>
       <Card title="Now" right={<Button small kind="outline" label="Use now" onPress={() => setInput(String(Math.floor(now.getTime() / 1000)))} />}>
-        <Text style={[mono, { color: c.text, fontSize: 22, fontWeight: '800' }]}>{Math.floor(now.getTime() / 1000)}</Text>
-        <Text style={{ color: c.text2 }}>{now.toLocaleString()}</Text>
+        <Text style={{ fontFamily: fonts.displaySemi, fontSize: 30, letterSpacing: -0.8 }}>{Math.floor(now.getTime() / 1000)}</Text>
+        <Text style={{ color: c.ink2 }}>{now.toLocaleString()}</Text>
       </Card>
       <Input label="Unix timestamp (s or ms) or date" value={input} onChangeText={setInput} autoCapitalize="none" code />
       {input.trim() && !info && <Notice>Couldn't understand that date or timestamp.</Notice>}

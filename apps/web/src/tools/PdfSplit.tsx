@@ -97,7 +97,7 @@ export default function PdfSplit() {
           <Alert>{error}</Alert>
           <div className="actions">
             <button type="button" className="btn btn-primary" disabled={busy} onClick={run}>
-              {busy ? <Spinner /> : '✂️'} Split PDF
+              {busy && <Spinner />} Split PDF
             </button>
           </div>
         </Card>

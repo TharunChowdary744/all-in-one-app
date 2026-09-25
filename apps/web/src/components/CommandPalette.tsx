@@ -1,4 +1,5 @@
-import { getCategory, searchTools, tools } from '@omnikit/core';
+import { getCategory, getToolCode, searchTools, tools } from '@omnikit/core';
+import { Search } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -28,11 +29,11 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
     <div className="palette-backdrop" onMouseDown={onClose}>
       <div className="palette" role="dialog" aria-modal="true" aria-label="Search tools" onMouseDown={(e) => e.stopPropagation()}>
         <div className="palette-input">
-          <span aria-hidden>🔍</span>
+          <Search size={18} />
           <input
             ref={inputRef}
             value={query}
-            placeholder="Search tools… e.g. “pdf to word”, “webp”, “json”"
+            placeholder="Find a tool — “pdf to word”, “webp”, “json”"
             onChange={(e) => {
               setQuery(e.target.value);
               setActive(0);
@@ -64,12 +65,16 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
               onMouseEnter={() => setActive(i)}
               onClick={() => go(t.id)}
             >
-              <span className="palette-icon">{t.icon}</span>
+              <span className="palette-code">{getToolCode(t)}</span>
               <span className="palette-name">{t.name}</span>
               <span className="palette-cat">{getCategory(t.category).name}</span>
             </li>
           ))}
         </ul>
+        <div className="palette-foot">
+          <span><kbd>↑</kbd> <kbd>↓</kbd> move</span>
+          <span><kbd>↵</kbd> open</span>
+        </div>
       </div>
     </div>
   );
