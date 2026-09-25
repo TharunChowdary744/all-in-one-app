@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>OmniKit</title>
+<script>
+  // GitHub Pages serves this file for every unknown path. Send the visitor to the index.html of the
+  // environment the path belongs to (/<repo>/, /<repo>/test/ or /<repo>/develop/) and let the SPA restore
+  // the original path from ?p=.
+  (function () {
+    var parts = location.pathname.split('/');
+    var base = '/' + parts[1] + '/';
+    var env = parts[2] === 'develop' || parts[2] === 'test' ? parts[2] + '/' : '';
+    location.replace(base + env + '?p=' + encodeURIComponent(location.pathname + location.search) + location.hash);
+  })();
+</script>
+</head>
+<body></body>
+</html>

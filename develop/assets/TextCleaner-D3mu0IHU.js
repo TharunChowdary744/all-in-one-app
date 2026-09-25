@@ -1,0 +1,7 @@
+import{r as e}from"./rolldown-runtime-W7wSyTde.js";import{k as t,t as n}from"./jsx-runtime-Brticyzx.js";import{r}from"./text-DNGss0WT.js";import{a as i,n as a,r as o}from"./ui-B_w-yDSw.js";var s=e(t(),1),c=n();function l(){let[e,t]=(0,s.useState)(`  banana
+apple  
+
+apple
+cherry   pie
+`),[n,l]=(0,s.useState)({trimLines:!0,collapseSpaces:!0,removeEmptyLines:!0,removeDuplicateLines:!0,sort:`none`}),u=(0,s.useMemo)(()=>r(e,n),[e,n]),d=e=>l(t=>({...t,[e]:!t[e]}));return(0,c.jsxs)(c.Fragment,{children:[(0,c.jsxs)(`div`,{className:`toolbar`,children:[[[`trimLines`,`Trim each line`],[`collapseSpaces`,`Collapse repeated spaces`],[`removeEmptyLines`,`Remove empty lines`],[`removeDuplicateLines`,`Remove duplicate lines`]].map(([e,t])=>(0,c.jsxs)(`label`,{className:`checkbox`,children:[(0,c.jsx)(`input`,{type:`checkbox`,checked:!!n[e],onChange:()=>d(e)}),` `,t]},e)),(0,c.jsx)(i,{value:n.sort??`none`,onChange:e=>l(t=>({...t,sort:e})),options:[{value:`none`,label:`No sort`},{value:`asc`,label:`A → Z`},{value:`desc`,label:`Z → A`}]})]}),(0,c.jsxs)(`div`,{className:`split`,children:[(0,c.jsx)(a,{title:`Input`,children:(0,c.jsx)(`textarea`,{className:`code editor`,value:e,onChange:e=>t(e.target.value),"aria-label":`Input`})}),(0,c.jsx)(a,{title:`Output · ${u?u.split(`
+`).length:0} lines`,actions:(0,c.jsx)(o,{text:u}),children:(0,c.jsx)(`textarea`,{className:`code editor`,readOnly:!0,value:u,"aria-label":`Output`})})]})]})}export{l as default};
