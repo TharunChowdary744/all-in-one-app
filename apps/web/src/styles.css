@@ -280,20 +280,20 @@ kbd {
 .section-head p { color: var(--muted); font-size: 14px; }
 .section-head .count { margin-left: auto; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
 
-/* Catalog: one grouped container per section, tools separated by hairlines. */
-.catalog {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden;
-  box-shadow: var(--shadow-sm);
-}
-/* Each cell draws hairlines on its left and top edge, shifted 1px outward so the
-   container clips the outermost ones; trailing empty columns stay clean. */
-.catalog > * { box-shadow: inset 1px 0 0 var(--line), inset 0 1px 0 var(--line); margin: -1px 0 0 -1px; }
+/* Catalog: each tool is its own tile (it is its own click target). Tiles sit in a grid with a
+   real gap, so rows that aren't full simply end — no empty slots inside a frame. */
+.catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
 .entry {
   position: relative; display: grid; grid-template-columns: 40px 1fr; column-gap: 14px; row-gap: 4px; align-content: start;
-  padding: 16px 44px 18px 17px; background: var(--surface); transition: background 0.15s;
+  padding: 16px 44px 16px 16px; background: var(--surface); cursor: pointer;
+  border: 1px solid var(--line); border-radius: var(--r-lg);
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
 }
-.entry:hover { background: color-mix(in srgb, var(--cat) 5%, var(--surface)); }
+.entry:hover {
+  border-color: color-mix(in srgb, var(--cat) 35%, var(--line));
+  background: color-mix(in srgb, var(--cat) 4%, var(--surface));
+  box-shadow: var(--shadow-md);
+}
 .entry-icon {
   grid-row: span 3; display: grid; place-items: center; width: 40px; height: 40px; border-radius: var(--r-md);
   color: var(--cat); background: color-mix(in srgb, var(--cat) 12%, transparent);
@@ -304,7 +304,6 @@ kbd {
 .entry-name::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
 .entry-name:focus-visible { box-shadow: none; }
 .entry-name:focus-visible::after { box-shadow: inset 0 0 0 2px var(--accent); }
-.entry { cursor: pointer; }
 .star { z-index: 1; }
 .entry-desc { color: var(--ink-2); font-size: 13.5px; line-height: 1.45; }
 .entry-tags { display: flex; gap: 6px; margin-top: 6px; }
@@ -512,6 +511,12 @@ div.editor { overflow: auto; max-height: 560px; }
 .loading { display: flex; align-items: center; gap: 10px; color: var(--ink-2); font-size: 14px; }
 .spinner { width: 14px; height: 14px; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; animation: spin 0.7s linear infinite; display: inline-block; }
 @keyframes spin { to { transform: rotate(360deg); } }
+.skeleton {
+  display: block; border-radius: var(--r-md);
+  background: linear-gradient(90deg, var(--surface-2) 0%, color-mix(in srgb, var(--surface-2) 40%, var(--surface)) 50%, var(--surface-2) 100%) 0 0 / 200% 100%;
+  animation: shimmer 1.2s ease-in-out infinite;
+}
+@keyframes shimmer { to { background-position: -200% 0; } }
 
 .chips-row { display: flex; flex-wrap: wrap; gap: 6px; }
 .chip { display: inline-flex; gap: 6px; align-items: center; height: 28px; padding: 0 10px; border-radius: 999px; font-size: 13px; background: var(--surface-2); }
@@ -524,11 +529,16 @@ div.editor { overflow: auto; max-height: 560px; }
 .filter-chip:hover { border-color: var(--line-strong); color: var(--ink); }
 .filter-chip.active { background: var(--ink); border-color: var(--ink); color: var(--bg); }
 
+/* Stat strip: flex items grow to fill every row, so there is never an empty cell. Each cell draws
+   its left/top hairline, offset 1px so the container's edge clips the outer ones. */
 .stats {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1px;
-  background: var(--line); border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden;
+  display: flex; flex-wrap: wrap; overflow: hidden;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg);
 }
-.stat { padding: 14px 16px; background: var(--surface); }
+.stat {
+  flex: 1 1 130px; padding: 14px 16px; margin: -1px 0 0 -1px;
+  box-shadow: inset 1px 0 0 var(--line), inset 0 1px 0 var(--line);
+}
 .stat-value { font-size: 26px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; font-variant-numeric: tabular-nums; }
 .stat-label { margin-top: 2px; font-size: 13px; color: var(--muted); }
 
@@ -589,7 +599,7 @@ div.editor { overflow: auto; max-height: 560px; }
   .section { margin-top: 28px; }
   .section-head h2 { font-size: 19px; }
   .section-head p { display: none; }
-  .catalog { grid-template-columns: 1fr; }
+  .catalog { grid-template-columns: 1fr; gap: 8px; }
   .star { opacity: 1; width: 40px; height: 40px; top: 8px; right: 6px; }
   .page-header { padding: 18px; border-radius: var(--r-lg); margin-top: 10px; }
   .page-header h1 { font-size: 24px; }

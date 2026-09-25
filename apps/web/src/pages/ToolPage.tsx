@@ -5,7 +5,6 @@ import { useParams } from 'react-router-dom';
 
 import { Breadcrumb } from '../components/Breadcrumb';
 import { RegistryIcon } from '../components/Icon';
-import { Spinner } from '../components/ui';
 import { useAppState } from '../state/AppState';
 import { toolComponents } from '../tools';
 import { NotFound } from './NotFound';
@@ -48,8 +47,11 @@ export function ToolPage() {
       </header>
       <Suspense
         fallback={
-          <div className="loading">
-            <Spinner /> Loading tool…
+          // Placeholder shaped like a tool panel so the page doesn't jump when the tool's code arrives.
+          <div className="card skeleton-card" role="status" aria-label="Loading tool">
+            <span className="skeleton" style={{ width: '28%', height: 16 }} />
+            <span className="skeleton" style={{ height: 140 }} />
+            <span className="skeleton" style={{ width: 160, height: 38 }} />
           </div>
         }
       >
