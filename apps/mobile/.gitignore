@@ -41,3 +41,6 @@ example
 # generated native folders
 /ios
 /android
+
+# Play Store service account key (written by CI from a secret; never commit)
+google-service-account.json

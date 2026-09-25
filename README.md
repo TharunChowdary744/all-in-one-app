@@ -73,6 +73,14 @@ npm test             # unit tests for @omnikit/core (Vitest)
 npm run typecheck    # TypeScript across all workspaces
 ```
 
+## Deployment
+
+- **Web**: every push to `main` (or the current development branch) builds `apps/web` and publishes it to GitHub Pages at
+  <https://tharunchowdary744.github.io/all-in-one-app/> (`.github/workflows/deploy-web.yml`).
+- **Android**: `.github/workflows/android-release.yml` builds with EAS and submits to Google Play automatically.
+  It needs a one-time setup described in [docs/PLAY_STORE.md](docs/PLAY_STORE.md).
+- **Privacy policy** (required by the stores): <https://tharunchowdary744.github.io/all-in-one-app/privacy.html>
+
 ## Adding a new tool
 
 1. Register it in `packages/core/src/registry/tools.ts` with an id, name, category, icon, keywords and `platforms`.

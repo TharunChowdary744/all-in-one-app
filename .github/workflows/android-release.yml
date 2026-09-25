@@ -1,0 +1,79 @@
+name: Release Android app to Google Play
+
+# Builds a signed Android App Bundle on EAS Build and submits it to Google Play.
+# Runs on every push to main that touches the mobile app or shared core, on tags
+# like mobile-v1.2.0, or manually from the Actions tab.
+#
+# Required repository secrets (Settings → Secrets and variables → Actions):
+#   EXPO_TOKEN                   Expo access token (expo.dev → Account settings → Access tokens)
+#   GOOGLE_SERVICE_ACCOUNT_JSON  Full JSON key of a Google Cloud service account that has
+#                                release permissions in Play Console
+# See docs/PLAY_STORE.md for the one-time setup.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - apps/mobile/**
+      - packages/core/**
+      - package-lock.json
+    tags: ['mobile-v*']
+  workflow_dispatch:
+
+concurrency:
+  group: android-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+    steps:
+      - name: Check secrets
+        id: secrets
+        run: |
+          if [ -z "$EXPO_TOKEN" ] || [ -z "$GOOGLE_SERVICE_ACCOUNT_JSON" ]; then
+            echo "::warning::EXPO_TOKEN and/or GOOGLE_SERVICE_ACCOUNT_JSON are not set; skipping the Play Store release. See docs/PLAY_STORE.md."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.secrets.outputs.ready == 'true'
+
+      - uses: actions/setup-node@v4
+        if: steps.secrets.outputs.ready == 'true'
+        with:
+          node-version: 22
+          cache: npm
+
+      - if: steps.secrets.outputs.ready == 'true'
+        run: npm install -g npm@11 && npm ci
+
+      - name: Test shared core
+        if: steps.secrets.outputs.ready == 'true'
+        run: npm test
+
+      - uses: expo/expo-github-action@v8
+        if: steps.secrets.outputs.ready == 'true'
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Write Play service account key
+        if: steps.secrets.outputs.ready == 'true'
+        working-directory: apps/mobile
+        run: printf '%s' "$GOOGLE_SERVICE_ACCOUNT_JSON" > google-service-account.json
+
+      - name: Link EAS project (no-op once projectId is in app.json)
+        if: steps.secrets.outputs.ready == 'true'
+        working-directory: apps/mobile
+        run: grep -q '"projectId"' app.json || eas init --non-interactive --force
+
+      - name: Build on EAS and submit to Google Play
+        if: steps.secrets.outputs.ready == 'true'
+        working-directory: apps/mobile
+        run: eas build --platform android --profile production --non-interactive --auto-submit

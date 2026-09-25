@@ -38,7 +38,9 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "OmniKit needs access to your photos so you can convert, resize and combine images."
+          "photosPermission": "OmniKit needs access to your photos so you can convert, resize and combine images.",
+          "cameraPermission": false,
+          "microphonePermission": false
         }
       ]
     ],
