@@ -16,7 +16,7 @@ export default function JsonFormatter() {
   return (
     <>
       <div className="toolbar">
-        <button type="button" className="btn btn-primary" onClick={() => run('format')}>Format</button>
+        <button type="button" className="btn btn-primary" onClick={() => run('format')}>Format JSON</button>
         <button type="button" className="btn btn-outline" onClick={() => run('minify')}>Minify</button>
         <Segmented value={indent} onChange={setIndent} label="Indentation" options={[{ value: 2, label: '2 spaces' }, { value: 4, label: '4 spaces' }, { value: 'tab', label: 'Tabs' }]} />
         <label className="checkbox"><input type="checkbox" checked={sortKeys} onChange={(e) => setSortKeys(e.target.checked)} /> Sort keys</label>

@@ -1,7 +1,9 @@
-import { getCategory, getToolCode, searchTools, tools } from '@omnikit/core';
+import { getCategory, searchTools, tools } from '@omnikit/core';
 import { Search } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import { RegistryIcon } from './Icon';
 
 export function CommandPalette({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [query, setQuery] = useState('');
@@ -32,8 +34,9 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
           <Search size={18} />
           <input
             ref={inputRef}
+            autoFocus
             value={query}
-            placeholder="Find a tool — “pdf to word”, “webp”, “json”"
+            placeholder="Search tools — try “pdf to word”, “webp” or “json”"
             onChange={(e) => {
               setQuery(e.target.value);
               setActive(0);
@@ -55,7 +58,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
           <kbd>Esc</kbd>
         </div>
         <ul className="palette-results" role="listbox">
-          {results.length === 0 && <li className="palette-empty">No tools match “{query}”</li>}
+          {results.length === 0 && <li className="palette-empty">No tools match “{query}”. Try a file format such as “png”.</li>}
           {results.map((t, i) => (
             <li
               key={t.id}
@@ -65,7 +68,9 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
               onMouseEnter={() => setActive(i)}
               onClick={() => go(t.id)}
             >
-              <span className="palette-code">{getToolCode(t)}</span>
+              <span className="palette-code" data-cat={t.category}>
+                <RegistryIcon name={t.icon} size={16} />
+              </span>
               <span className="palette-name">{t.name}</span>
               <span className="palette-cat">{getCategory(t.category).name}</span>
             </li>

@@ -5,7 +5,7 @@ import { View } from 'react-native';
 import { ToolCard } from '@/components/ToolCard';
 import { Heading, Screen, Text } from '@/components/ui';
 import { useAppState } from '@/state/AppState';
-import { useColors } from '@/theme/colors';
+import { radius, useColors } from '@/theme/colors';
 
 export default function Favorites() {
   const c = useColors();
@@ -14,13 +14,15 @@ export default function Favorites() {
   return (
     <Screen>
       {list.length === 0 ? (
-        <View style={{ paddingVertical: 48, gap: 12 }}>
-          <Star size={28} color={c.accent} strokeWidth={1.6} />
-          <Heading size={30}>Nothing starred yet.</Heading>
-          <Text style={{ color: c.ink2, fontSize: 15, lineHeight: 22 }}>Tap the star on any tool to keep it here, one tap away.</Text>
+        <View style={{ paddingVertical: 40, gap: 10 }}>
+          <Star size={24} color={c.accent} strokeWidth={1.75} />
+          <Heading size={22}>No starred tools yet</Heading>
+          <Text style={{ color: c.ink2, fontSize: 15, lineHeight: 22 }}>Tap the star next to any tool to keep it here and at the top of the Tools tab.</Text>
         </View>
       ) : (
-        <View style={{ borderTopWidth: 1, borderColor: c.ink }}>{list.map((t) => <ToolCard key={t.id} tool={t} />)}</View>
+        <View style={{ borderWidth: 1, borderColor: c.line, borderRadius: radius.lg, backgroundColor: c.surface, overflow: 'hidden' }}>
+          {list.map((t, i) => <ToolCard key={t.id} tool={t} last={i === list.length - 1} />)}
+        </View>
       )}
     </Screen>
   );

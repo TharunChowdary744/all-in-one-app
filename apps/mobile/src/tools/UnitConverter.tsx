@@ -27,8 +27,8 @@ export default function UnitConverter() {
       <Card title="From unit">
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
           {group.units.map((u) => (
-            <Pressable key={u.id} onPress={() => setFrom(u.id)} style={{ paddingHorizontal: 12, paddingVertical: 8, borderRadius: radius.sm, backgroundColor: u.id === fromUnit.id ? c.accent : c.surface2 }}>
-              <Text style={{ color: u.id === fromUnit.id ? c.accentInk : c.ink, fontWeight: '600' }}>{u.symbol}</Text>
+            <Pressable key={u.id} onPress={() => setFrom(u.id)} style={{ paddingHorizontal: 12, paddingVertical: 8, borderRadius: radius.sm, backgroundColor: u.id === fromUnit.id ? c.ink : c.surface2 }}>
+              <Text style={{ color: u.id === fromUnit.id ? c.background : c.ink, fontWeight: '600' }}>{u.symbol}</Text>
             </Pressable>
           ))}
         </View>
