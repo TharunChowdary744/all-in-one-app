@@ -27,7 +27,11 @@ const light = {
     developer: '#3f7650',
     converter: '#1f6f73',
     security: '#6a4a8c',
+    finance: '#5f6a12',
+    calculator: '#4f5f70',
   } as Record<CategoryId, string>,
+  // Chart series, validated for colour-blind separation and contrast on `surface`.
+  series: { base: '#2a6fc2', growth: '#d0622c' },
 };
 
 export type Palette = typeof light;
@@ -56,7 +60,10 @@ const dark: Palette = {
     developer: '#88c296',
     converter: '#6cc0c2',
     security: '#b99bdc',
+    finance: '#c4c75a',
+    calculator: '#a9b8c8',
   },
+  series: { base: '#4d8fe0', growth: '#e2703a' },
 };
 
 export function useColors(): Palette {

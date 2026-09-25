@@ -1,6 +1,6 @@
 # OmniKit
 
-**Every everyday tool, in one kit.** OmniKit puts image converters, PDF tools, document converters, text utilities, developer helpers, unit and color converters, and security tools behind one dashboard. It ships as:
+**Every everyday tool, in one kit.** OmniKit puts image converters, PDF tools, document converters, text utilities, developer helpers, unit and color converters, security tools, and finance and everyday calculators behind one dashboard. It ships as:
 
 - **Web**: React 19, Vite and React Router (`apps/web`)
 - **Mobile**: React Native with Expo SDK 57 and Expo Router, for iOS and Android (`apps/mobile`)
@@ -25,6 +25,10 @@ Both apps share one tool registry and all pure conversion logic through `@omniki
 | 🧑‍💻 Developer | JSON Formatter, Base64, URL Encoder, UUID, QR Code | ✅ | ✅ |
 | 🔁 Converters | Units (8 groups), Colors (HEX/RGB/HSL), Unix Timestamps | ✅ | ✅ |
 | 🔐 Security | Password Generator, Hash Generator (MD5/SHA-1/256/384/512, text or file) | ✅ | ✅ |
+| 🏦 Finance | SIP (with yearly step-up), Lumpsum, SWP, EMI / Loan (amortization), FD & compound/simple interest, CAGR, GST (add/remove, CGST/SGST) | ✅ | ✅ |
+| 🧮 Calculators | Scientific (trig, logs, powers, factorial, history), Percentage & discount, BMI (metric/imperial), Age & date, Tip & bill split | ✅ | ✅ |
+
+The finance calculators show a year-by-year chart and table, and use a currency you choose (₹ INR by default, with Indian lakh/crore grouping; $, €, £, AED and A$ also available). All maths lives in `packages/core/src/lib/calc` and is unit-tested against standard published results. The scientific calculator uses a safe parser rather than `eval`.
 
 🌐 means the mobile app shows the tool in its dashboard and points users to the web app. These tools depend on pdf.js, pdf-lib and mammoth, which rely on browser APIs.
 

@@ -30,7 +30,7 @@ export default function Dashboard() {
           <View style={{ gap: 6 }}>
             <Heading size={28}>All tools</Heading>
             <Text style={{ color: c.ink2, fontSize: 15, lineHeight: 22 }}>
-              {tools.length} tools for images, PDFs, documents, text and code. Everything runs on your phone.
+              {tools.length} tools for files, text, code, money and everyday maths. Everything runs on your phone.
             </Text>
           </View>
           <Pressable

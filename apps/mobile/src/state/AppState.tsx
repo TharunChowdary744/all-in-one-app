@@ -1,3 +1,4 @@
+import type { CurrencyCode } from '@omnikit/core';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 
@@ -11,6 +12,7 @@ interface Persisted {
   recents: RecentEntry[];
   usage: Record<string, number>;
   filesProcessed: number;
+  currency: CurrencyCode;
 }
 
 interface AppState extends Persisted {
@@ -20,11 +22,12 @@ interface AppState extends Persisted {
   recordVisit: (id: string) => void;
   recordFiles: (count: number) => void;
   clearHistory: () => void;
+  setCurrency: (currency: CurrencyCode) => void;
 }
 
 const KEY = 'omnikit:state:v1';
 const MAX_RECENTS = 8;
-const initial: Persisted = { favorites: [], recents: [], usage: {}, filesProcessed: 0 };
+const initial: Persisted = { favorites: [], recents: [], usage: {}, filesProcessed: 0, currency: 'INR' };
 
 const Ctx = createContext<AppState | null>(null);
 
@@ -56,6 +59,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const recordFiles = useCallback((count: number) => setState((s) => ({ ...s, filesProcessed: s.filesProcessed + count })), []);
+  const setCurrency = useCallback((currency: CurrencyCode) => setState((s) => ({ ...s, currency })), []);
   const clearHistory = useCallback(() => setState((s) => ({ ...s, recents: [], usage: {}, filesProcessed: 0 })), []);
 
   const value = useMemo<AppState>(
@@ -67,8 +71,9 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       recordVisit,
       recordFiles,
       clearHistory,
+      setCurrency,
     }),
-    [state, ready, toggleFavorite, recordVisit, recordFiles, clearHistory],
+    [state, ready, toggleFavorite, recordVisit, recordFiles, clearHistory, setCurrency],
   );
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

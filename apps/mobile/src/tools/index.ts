@@ -1,6 +1,9 @@
-import type { ComponentType } from 'react';
+import { getTool } from '@omnikit/core';
+import { createElement, type ComponentType } from 'react';
 
 import Base64Tool from './Base64Tool';
+import { FormCalculator } from './calc/FormCalculator';
+import { ScientificCalculator } from './calc/ScientificCalculator';
 import CaseConverter from './CaseConverter';
 import ColorConverter from './ColorConverter';
 import CsvJson from './CsvJson';
@@ -39,4 +42,13 @@ export const toolScreens: Record<string, ComponentType> = {
   'timestamp-converter': TimestampConverter,
   'password-generator': PasswordGenerator,
   'hash-generator': HashGenerator,
+  'scientific-calculator': ScientificCalculator,
+  ...Object.fromEntries(
+    ['sip-calculator', 'lumpsum-calculator', 'swp-calculator', 'emi-calculator', 'interest-calculator', 'cagr-calculator', 'gst-calculator',
+      'percentage-calculator', 'bmi-calculator', 'date-calculator', 'tip-calculator'].map((id) => {
+      const category = getTool(id)!.category as 'finance' | 'calculator';
+      const Screen: ComponentType = () => createElement(FormCalculator, { toolId: id, category });
+      return [id, Screen];
+    }),
+  ),
 };

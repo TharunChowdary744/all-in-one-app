@@ -8,6 +8,8 @@ export const categories: Category[] = [
   { id: 'developer', code: 'DEV', name: 'Developer', description: 'Formatters, encoders and generators', icon: 'Braces' },
   { id: 'converter', code: 'CNV', name: 'Converters', description: 'Units, colors and time', icon: 'ArrowLeftRight' },
   { id: 'security', code: 'SEC', name: 'Security', description: 'Passwords and checksums', icon: 'ShieldCheck' },
+  { id: 'finance', code: 'FIN', name: 'Finance', description: 'SIP, loans, interest and tax calculators', icon: 'Landmark' },
+  { id: 'calculator', code: 'CAL', name: 'Calculators', description: 'Scientific, percentage, BMI, dates and bill splitting', icon: 'Calculator' },
 ];
 
 const byId = new Map(categories.map((c) => [c.id, c]));
