@@ -18,10 +18,17 @@
     }
   },
   "submit": {
-    "production": {
+    "internal": {
       "android": {
         "serviceAccountKeyPath": "./google-service-account.json",
         "track": "internal",
+        "releaseStatus": "completed"
+      }
+    },
+    "production": {
+      "android": {
+        "serviceAccountKeyPath": "./google-service-account.json",
+        "track": "production",
         "releaseStatus": "completed"
       }
     }

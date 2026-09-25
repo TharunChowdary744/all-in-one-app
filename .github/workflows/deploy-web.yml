@@ -1,36 +1,86 @@
-name: Deploy web to GitHub Pages
+name: Deploy web
+
+# develop → https://<owner>.github.io/<repo>/develop/
+# test    → https://<owner>.github.io/<repo>/test/
+# prod    → https://<owner>.github.io/<repo>/
+#
+# A merged PR is a push to the target branch, so every merge into develop, test or prod
+# redeploys that environment. Each run rebuilds only its own environment and keeps the
+# other two exactly as they are on the gh-pages branch.
 
 on:
   push:
-    branches: [main, claude/serene-ptolemy-fv985j]
+    branches: [develop, test, prod]
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: pages
-  cancel-in-progress: true
+  group: gh-pages
+  cancel-in-progress: false
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.ref_name }}
+      url: ${{ steps.target.outputs.url }}
     steps:
+      - name: Resolve target
+        id: target
+        run: |
+          owner="${GITHUB_REPOSITORY_OWNER,,}"
+          repo="${{ github.event.repository.name }}"
+          case "${{ github.ref_name }}" in
+            prod)    dir="" ;;
+            test)    dir="test/" ;;
+            develop) dir="develop/" ;;
+            *) echo "::error::Deploys run only from develop, test or prod"; exit 1 ;;
+          esac
+          echo "dir=$dir" >> "$GITHUB_OUTPUT"
+          echo "base=/$repo/$dir" >> "$GITHUB_OUTPUT"
+          echo "url=https://$owner.github.io/$repo/$dir" >> "$GITHUB_OUTPUT"
+
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-      - run: npm install -g npm@11
-      - run: npm ci
+
+      - run: npm install -g npm@11 && npm ci
+
+      - name: Test
+        run: npm test
+
       - name: Build web app
         run: npm run web:build
         env:
-          BASE_PATH: /${{ github.event.repository.name }}/
-      # GitHub Pages has no SPA rewrites; serving index.html as 404.html makes deep links work.
-      - run: cp apps/web/dist/index.html apps/web/dist/404.html && touch apps/web/dist/.nojekyll
+          BASE_PATH: ${{ steps.target.outputs.base }}
+          VITE_APP_ENV: ${{ github.ref_name }}
+
+      - name: Assemble site (keep the other environments)
+        run: |
+          mkdir site
+          if git fetch --depth=1 origin gh-pages 2>/dev/null; then
+            git archive FETCH_HEAD | tar -x -C site
+          fi
+          dir="${{ steps.target.outputs.dir }}"
+          if [ -z "$dir" ]; then
+            # prod lives at the root: clear everything except the other environments.
+            find site -mindepth 1 -maxdepth 1 ! -name develop ! -name test -exec rm -rf {} +
+          else
+            rm -rf "site/$dir"
+          fi
+          mkdir -p "site/$dir"
+          cp -R apps/web/dist/. "site/$dir"
+          cp .github/pages/404.html site/404.html
+          touch site/.nojekyll
+
       - uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: apps/web/dist
+          publish_dir: site
           force_orphan: true
+          commit_message: "deploy ${{ github.ref_name }}: ${{ github.sha }}"

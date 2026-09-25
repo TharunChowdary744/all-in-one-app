@@ -4,9 +4,10 @@ The workflow `.github/workflows/android-release.yml` builds a signed Android App
 [EAS Build](https://docs.expo.dev/build/introduction/) and submits it to Google Play with
 [EAS Submit](https://docs.expo.dev/submit/android/). It runs:
 
-- on every push to `main` that changes `apps/mobile/**`, `packages/core/**` or `package-lock.json`
-- on tags matching `mobile-v*` (for example `git tag mobile-v1.1.0 && git push --tags`)
-- manually: **Actions → Release Android app to Google Play → Run workflow**
+- when a PR is merged into **`test`** → uploaded to the Play **internal** testing track
+- when a PR is merged into **`prod`** → uploaded to the Play **production** track
+- only if the merge changed `apps/mobile/**`, `packages/core/**` or `package-lock.json`
+- manually: **Actions → Release Android app to Google Play → Run workflow** (pick the branch)
 
 Until the two secrets below exist, the workflow skips itself with a warning instead of failing.
 
@@ -54,23 +55,13 @@ EAS generates and stores the upload keystore for you. Download the `.aab` from t
    *Release apps to testing tracks* and *Release to production* (at least for OmniKit).
 4. Add the whole JSON file contents as a GitHub secret named `GOOGLE_SERVICE_ACCOUNT_JSON`.
 
-From now on every qualifying push builds a new version (the `versionCode` is auto-incremented by EAS) and
-publishes it to the **internal** testing track.
+From now on every qualifying merge builds a new version (EAS auto-increments the `versionCode`) and
+publishes it to the track for that branch.
 
-## Going to production
+## Tracks
 
-Releases go to the `internal` track by default so you can test on real devices first. To publish straight to
-the Play Store, change `apps/mobile/eas.json`:
-
-```json
-"submit": {
-  "production": {
-    "android": { "track": "production", "releaseStatus": "completed" }
-  }
-}
-```
-
-If Play Console still shows the app as a **draft** (not yet reviewed), submissions must use
-`"releaseStatus": "draft"` until the first review is approved.
+`apps/mobile/eas.json` defines two submit profiles: `internal` (used for `test`) and `production` (used for `prod`).
+If Play Console still shows the app as a **draft** (not yet reviewed), set `"releaseStatus": "draft"` in the
+`production` profile until the first review is approved.
 
 Bump the user-facing version by changing `expo.version` in `apps/mobile/app.json`.

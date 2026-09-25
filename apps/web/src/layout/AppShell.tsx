@@ -9,6 +9,8 @@ import { useAppState, type ThemePreference } from '../state/AppState';
 
 const themeCycle: Record<ThemePreference, ThemePreference> = { system: 'light', light: 'dark', dark: 'system' };
 const ThemeIcon = { system: Monitor, light: Sun, dark: Moon };
+/** Set at build time by the deploy workflow; non-prod builds show a badge so environments aren't confused. */
+const APP_ENV = import.meta.env.VITE_APP_ENV as string | undefined;
 
 export function AppShell() {
   const [paletteOpen, setPaletteOpen] = useState(false);
@@ -82,6 +84,11 @@ export function AppShell() {
             <kbd>⌘K</kbd>
           </button>
           <span className="topbar-spacer" />
+          {APP_ENV && APP_ENV !== 'prod' && (
+            <span className="env-badge" title={`This is the ${APP_ENV} environment`}>
+              {APP_ENV}
+            </span>
+          )}
           <button type="button" className="icon-btn plain" aria-label={`Theme: ${theme}. Click to change.`} title={`Theme: ${theme}`} onClick={() => setTheme(themeCycle[theme])}>
             <Theme size={17} strokeWidth={1.6} />
           </button>

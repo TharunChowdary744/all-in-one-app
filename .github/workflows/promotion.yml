@@ -1,0 +1,31 @@
+name: Promotion flow
+
+# Enforces the release path: feature → develop → test → prod.
+#   PRs into test must come from develop.
+#   PRs into prod must come from test.
+# Make "Promotion flow / source-branch" a required status check on test and prod (docs/BRANCHING.md).
+
+on:
+  pull_request:
+    branches: [test, prod]
+    types: [opened, reopened, synchronize, edited]
+
+jobs:
+  source-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR source branch
+        env:
+          BASE: ${{ github.base_ref }}
+          HEAD: ${{ github.head_ref }}
+          SAME_REPO: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+        run: |
+          case "$BASE" in
+            test) expected=develop ;;
+            prod) expected=test ;;
+          esac
+          if [ "$HEAD" != "$expected" ] || [ "$SAME_REPO" != "true" ]; then
+            echo "::error::Pull requests into '$BASE' must come from '$expected' in this repository (got '$HEAD'). Flow: develop → test → prod."
+            exit 1
+          fi
+          echo "OK: $HEAD → $BASE"

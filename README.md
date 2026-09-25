@@ -79,6 +79,62 @@ npm run typecheck    # TypeScript across all workspaces
 
 ## Deployment
 
+Three long-lived branches map to three environments. Changes flow **develop → test → prod** through pull requests.
+
+| Environment | Branch | URL |
+| --- | --- | --- |
+| Develop | `develop` | https://tharunchowdary744.github.io/all-in-one-app/develop/ |
+| Test | `test` | https://tharunchowdary744.github.io/all-in-one-app/test/ |
+| Production | `prod` | https://tharunchowdary744.github.io/all-in-one-app/ |
+
+Merging a PR into a branch deploys that environment automatically. Merges into `test` and `prod` also ship the Android app to the Play internal and production tracks once the Play Store secrets are set up. See [docs/BRANCHING.md](docs/BRANCHING.md) for the full flow and the one-time repo settings, and [docs/PLAY_STORE.md](docs/PLAY_STORE.md) for Google Play.
+
+Privacy policy (required by the stores): https://tharunchowdary744.github.io/all-in-one-app/privacy.html
+
+## Design
+
+OmniKit uses a "workbench catalog" look: warm paper (`#f3f0e8`), ink (`#1c1b17`) and a single signal-orange accent (`#e0531f`), with flat surfaces separated by hairlines. Type is **Bricolage Grotesque** (display), **IBM Plex Sans** (text) and **IBM Plex Mono** (labels). The fonts are bundled with both apps, so nothing loads from a font CDN. Every tool has a catalog code such as `PDF-03`, and icons come from [Lucide](https://lucide.dev). The same tokens are defined in `apps/web/src/styles.css` and `apps/mobile/src/theme/colors.ts`.
+
+## Repository layout
+
+```
+.
+├── apps/
+│   ├── web/          # React + Vite web app
+│   │   └── src/
+│   │       ├── layout/     # App shell: sidebar, top bar, command palette
+│   │       ├── pages/      # Dashboard, category, favorites, tool page
+│   │       ├── tools/      # One code-split component per tool
+│   │       └── lib/        # Browser helpers (canvas, pdf.js, downloads)
+│   └── mobile/       # Expo / React Native app
+│       └── src/
+│           ├── app/        # Expo Router routes: (tabs), tool/[id], category/[id]
+│           ├── tools/      # Native tool screens
+│           └── lib/        # Image manipulation, sharing, file helpers
+└── packages/
+    └── core/         # @omnikit/core: registry + platform-agnostic logic (+ tests)
+```
+
+## Getting started
+
+Requirements: **Node 20+** and **npm 11+**. npm 10 hits an arborist bug with this workspace layout; run `npm i -g npm@11` or use `npx npm@11 install`.
+
+```bash
+npm install          # installs every workspace
+
+npm run web          # web dev server at http://localhost:5173
+npm run web:build    # production build → apps/web/dist
+
+npm run mobile       # Expo dev server (scan the QR code with Expo Go, or press a / i)
+npm run mobile:android
+npm run mobile:ios
+
+npm test             # unit tests for @omnikit/core (Vitest)
+npm run typecheck    # TypeScript across all workspaces
+```
+
+## Deployment
+
 - **Web**: every push to `main` (or the current development branch) builds `apps/web` and publishes it to GitHub Pages at
   <https://tharunchowdary744.github.io/all-in-one-app/> (`.github/workflows/deploy-web.yml`).
 - **Android**: `.github/workflows/android-release.yml` builds with EAS and submits to Google Play automatically.

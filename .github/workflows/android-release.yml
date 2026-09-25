@@ -1,8 +1,9 @@
 name: Release Android app to Google Play
 
-# Builds a signed Android App Bundle on EAS Build and submits it to Google Play.
-# Runs on every push to main that touches the mobile app or shared core, on tags
-# like mobile-v1.2.0, or manually from the Actions tab.
+# Builds a signed Android App Bundle on EAS Build and submits it to Google Play:
+#   merge into test → Play "internal" testing track
+#   merge into prod → Play "production" track
+# Only runs when the mobile app, shared core or lockfile changed; can also be run manually.
 #
 # Required repository secrets (Settings → Secrets and variables → Actions):
 #   EXPO_TOKEN                   Expo access token (expo.dev → Account settings → Access tokens)
@@ -12,22 +13,23 @@ name: Release Android app to Google Play
 
 on:
   push:
-    branches: [main]
+    branches: [test, prod]
     paths:
       - apps/mobile/**
       - packages/core/**
       - package-lock.json
-    tags: ['mobile-v*']
   workflow_dispatch:
 
 concurrency:
-  group: android-release
+  group: android-release-${{ github.ref_name }}
   cancel-in-progress: false
 
 jobs:
   release:
     runs-on: ubuntu-latest
+    environment: play-${{ github.ref_name == 'prod' && 'production' || 'internal' }}
     env:
+      SUBMIT_PROFILE: ${{ github.ref_name == 'prod' && 'production' || 'internal' }}
       EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
       GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
     steps:
@@ -76,4 +78,4 @@ jobs:
       - name: Build on EAS and submit to Google Play
         if: steps.secrets.outputs.ready == 'true'
         working-directory: apps/mobile
-        run: eas build --platform android --profile production --non-interactive --auto-submit
+        run: eas build --platform android --profile production --non-interactive --auto-submit-with-profile "$SUBMIT_PROFILE"

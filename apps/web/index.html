@@ -7,6 +7,13 @@
     <meta name="theme-color" content="#f3f0e8" />
     <link rel="icon" type="image/svg+xml" href="/logo.svg" />
     <title>OmniKit</title>
+    <script>
+      // Restore a deep link forwarded by the GitHub Pages 404 page (see .github/pages/404.html).
+      (function () {
+        var p = new URLSearchParams(location.search).get('p');
+        if (p) history.replaceState(null, '', p);
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
