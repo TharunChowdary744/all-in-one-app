@@ -14,10 +14,10 @@ export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: c.ink,
+        tabBarActiveTintColor: c.accentStrong,
         tabBarInactiveTintColor: c.muted,
         tabBarStyle: { backgroundColor: c.background, borderTopColor: c.line },
-        tabBarLabelStyle: { fontFamily: fonts.monoMedium, fontSize: 10, letterSpacing: 0.8, textTransform: 'uppercase' },
+        tabBarLabelStyle: { fontFamily: fonts.sansMedium, fontSize: 11 },
         headerStyle: { backgroundColor: c.background },
         headerShadowVisible: false,
         headerTintColor: c.ink,
@@ -26,8 +26,8 @@ export default function TabsLayout() {
         sceneStyle: { backgroundColor: c.background },
       }}
     >
-      <Tabs.Screen name="index" options={{ title: 'Index', headerShown: false, tabBarIcon: icon(LayoutGrid) }} />
-      <Tabs.Screen name="tools" options={{ title: 'Find', headerTitle: 'Find a tool', tabBarIcon: icon(Search) }} />
+      <Tabs.Screen name="index" options={{ title: 'Tools', headerShown: false, tabBarIcon: icon(LayoutGrid) }} />
+      <Tabs.Screen name="tools" options={{ title: 'Search', headerTitle: 'Search tools', tabBarIcon: icon(Search) }} />
       <Tabs.Screen name="favorites" options={{ title: 'Starred', tabBarIcon: icon(Star) }} />
       <Tabs.Screen name="about" options={{ title: 'About', tabBarIcon: icon(Info) }} />
     </Tabs>

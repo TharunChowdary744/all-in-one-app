@@ -18,7 +18,7 @@ import {
 } from 'react-native';
 
 import { Label, Text } from '@/components/Text';
-import { fonts, radius, spacing, useColors } from '@/theme/colors';
+import { fonts, radius, spacing, useColors, withAlpha } from '@/theme/colors';
 
 export { Heading, Label, Text } from '@/components/Text';
 
@@ -44,8 +44,8 @@ export function Card({ title, right, children, style }: { title?: string; right?
   return (
     <View style={[styles.card, { backgroundColor: c.surface, borderColor: c.line }, style]}>
       {(title || right) && (
-        <View style={[styles.cardHeader, { borderColor: c.line }]}>
-          {title ? <Label style={{ color: c.ink, flex: 1 }}>{title}</Label> : <View />}
+        <View style={styles.cardHeader}>
+          {title ? <Text style={{ fontFamily: fonts.sansSemi, fontSize: 15, flex: 1 }}>{title}</Text> : <View />}
           {right}
         </View>
       )}
@@ -87,8 +87,8 @@ export function Button({
         styles.button,
         small && styles.buttonSmall,
         {
-          backgroundColor: pressed && kind === 'primary' ? c.accent : bg,
-          borderColor: kind === 'outline' ? (pressed ? c.ink : c.line) : 'transparent',
+          backgroundColor: pressed ? (kind === 'primary' ? c.accentStrong : c.surface2) : bg,
+          borderColor: kind === 'outline' ? c.lineStrong : 'transparent',
           opacity: disabled ? 0.4 : 1,
         },
         style,
@@ -103,7 +103,7 @@ export function Button({
 export function Segmented<T extends string | number>({ value, options, onChange }: { value: T; options: { value: T; label: string }[]; onChange: (v: T) => void }) {
   const c = useColors();
   return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={[styles.segmented, { borderColor: c.line, backgroundColor: c.background }]}>
+    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={[styles.segmented, { borderColor: c.line, backgroundColor: c.surface2 }]}>
       {options.map((o) => {
         const active = o.value === value;
         return (
@@ -112,9 +112,9 @@ export function Segmented<T extends string | number>({ value, options, onChange 
             accessibilityRole="radio"
             accessibilityState={{ selected: active }}
             onPress={() => onChange(o.value)}
-            style={[styles.segment, active && { backgroundColor: c.ink }]}
+            style={[styles.segment, active && { backgroundColor: c.surface, borderColor: c.line }]}
           >
-            <Text style={{ color: active ? c.background : c.ink2, fontSize: 13, fontFamily: active ? fonts.sansMedium : fonts.sans }}>{o.label}</Text>
+            <Text style={{ color: active ? c.ink : c.ink2, fontSize: 13, fontFamily: active ? fonts.sansSemi : fonts.sansMedium }}>{o.label}</Text>
           </Pressable>
         );
       })}
@@ -125,7 +125,7 @@ export function Segmented<T extends string | number>({ value, options, onChange 
 export function Chip({ label, active, onPress }: { label: string; active?: boolean; onPress: () => void }) {
   const c = useColors();
   return (
-    <Pressable onPress={onPress} style={[styles.chip, { backgroundColor: active ? c.ink : 'transparent', borderColor: active ? c.ink : c.line }]}>
+    <Pressable onPress={onPress} style={[styles.chip, { backgroundColor: active ? c.ink : c.surface, borderColor: active ? c.ink : c.line }]}>
       <Text style={{ color: active ? c.background : c.ink2, fontSize: 13 }}>{label}</Text>
     </Pressable>
   );
@@ -136,7 +136,7 @@ export function Input({ label, multiline, code, style, ...props }: TextInputProp
   const [focused, setFocused] = useState(false);
   return (
     <View style={{ gap: 6 }}>
-      {label && <Label style={{ color: c.ink2 }}>{label}</Label>}
+      {label && <Label>{label}</Label>}
       <TextInput
         placeholderTextColor={c.muted}
         multiline={multiline}
@@ -146,7 +146,7 @@ export function Input({ label, multiline, code, style, ...props }: TextInputProp
         onBlur={() => setFocused(false)}
         style={[
           styles.input,
-          { color: c.ink, backgroundColor: c.surface, borderColor: focused ? c.ink : c.line, fontFamily: code ? fonts.mono : fonts.sans },
+          { color: c.ink, backgroundColor: c.surface, borderColor: focused ? c.ink : c.lineStrong, fontFamily: code ? fonts.mono : fonts.sans },
           multiline && { minHeight: 120, textAlignVertical: 'top' },
           style,
         ]}
@@ -161,7 +161,10 @@ export function Toggle({ label, value, onChange }: { label: string; value: boole
   return (
     <View style={styles.toggle}>
       <Text style={{ flex: 1, fontSize: 15 }}>{label}</Text>
-      <Switch value={value} onValueChange={onChange} trackColor={{ true: c.ink, false: c.line }} thumbColor={value ? c.accent : c.surface} />
+      <Switch value={value} onValueChange={onChange} trackColor={{ true: c.ink, false: c.line }} thumbColor={value ? c.accent : c.surface}
+        // react-native-web ignores thumbColor for the on state.
+        {...({ activeThumbColor: c.accent } as object)}
+      />
     </View>
   );
 }
@@ -192,7 +195,7 @@ export function ResultRow({ label, value }: { label: string; value: string }) {
   return (
     <View style={[styles.resultRow, { borderColor: c.line }]}>
       <View style={{ flex: 1, gap: 3 }}>
-        <Label style={{ color: c.ink2 }}>{label}</Label>
+        <Label style={{ fontSize: 12.5 }}>{label}</Label>
         <Text selectable style={{ fontFamily: fonts.mono, fontSize: 14 }}>
           {value || '—'}
         </Text>
@@ -218,15 +221,15 @@ export function Stat({ label, value }: { label: string; value: string | number }
   const c = useColors();
   return (
     <View style={[styles.stat, { borderColor: c.line }]}>
-      <Text style={{ fontFamily: fonts.displaySemi, fontSize: 28, letterSpacing: -0.8, lineHeight: 30 }}>{value}</Text>
-      <Label>{label}</Label>
+      <Text style={{ fontFamily: fonts.sansSemi, fontSize: 24, letterSpacing: -0.4, lineHeight: 28 }}>{value}</Text>
+      <Text style={{ fontSize: 13, color: c.muted }}>{label}</Text>
     </View>
   );
 }
 
 export function StatGrid({ children }: { children: ReactNode }) {
   const c = useColors();
-  return <View style={[styles.statGrid, { borderColor: c.ink }]}>{children}</View>;
+  return <View style={[styles.statGrid, { borderColor: c.line, backgroundColor: c.surface }]}>{children}</View>;
 }
 
 export function Notice({ kind = 'error', children }: { kind?: 'error' | 'info' | 'success'; children?: ReactNode }) {
@@ -234,7 +237,7 @@ export function Notice({ kind = 'error', children }: { kind?: 'error' | 'info' |
   if (!children) return null;
   const color = kind === 'error' ? c.bad : kind === 'success' ? c.good : c.ink2;
   return (
-    <View style={[styles.notice, { borderColor: kind === 'info' ? c.muted : color, backgroundColor: c.surface }]}>
+    <View style={[styles.notice, { borderColor: kind === 'info' ? c.line : withAlpha(color, 0.35), backgroundColor: kind === 'info' ? c.surface2 : withAlpha(color, 0.07) }]}>
       <Text style={{ color, fontSize: 14 }}>{children}</Text>
     </View>
   );
@@ -251,19 +254,19 @@ export function Muted({ children }: { children: ReactNode }) {
 
 const styles = StyleSheet.create({
   screen: { padding: spacing.lg, gap: spacing.lg, paddingBottom: 56 },
-  card: { borderWidth: StyleSheet.hairlineWidth * 2, borderRadius: radius.md, padding: spacing.lg, gap: spacing.md },
-  cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: spacing.sm, paddingBottom: spacing.sm, borderBottomWidth: 1, minHeight: 30 },
-  button: { flexDirection: 'row', gap: 8, alignItems: 'center', justifyContent: 'center', borderRadius: radius.sm, height: 46, paddingHorizontal: 18, borderWidth: 1 },
-  buttonSmall: { height: 32, paddingHorizontal: 10, gap: 6 },
-  segmented: { flexDirection: 'row', borderRadius: radius.sm, borderWidth: 1, padding: 2, gap: 2 },
-  segment: { paddingVertical: 7, paddingHorizontal: 13, borderRadius: 3 },
-  chip: { borderWidth: 1, borderRadius: 99, paddingHorizontal: 13, paddingVertical: 6 },
-  input: { borderWidth: 1, borderRadius: radius.sm, paddingHorizontal: 12, paddingVertical: 11, fontSize: 15 },
+  card: { borderWidth: 1, borderRadius: radius.lg, padding: spacing.lg, gap: spacing.md },
+  cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: spacing.sm, minHeight: 30 },
+  button: { flexDirection: 'row', gap: 8, alignItems: 'center', justifyContent: 'center', borderRadius: radius.md, height: 48, paddingHorizontal: 18, borderWidth: 1 },
+  buttonSmall: { height: 36, paddingHorizontal: 10, gap: 6 },
+  segmented: { flexDirection: 'row', borderRadius: radius.md, borderWidth: 1, padding: 3, gap: 2 },
+  segment: { paddingVertical: 7, paddingHorizontal: 13, borderRadius: 6, borderWidth: 1, borderColor: 'transparent' },
+  chip: { borderWidth: 1, borderRadius: 99, paddingHorizontal: 13, height: 34, justifyContent: 'center' },
+  input: { borderWidth: 1, borderRadius: radius.md, paddingHorizontal: 12, paddingVertical: 11, fontSize: 15 },
   toggle: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, minHeight: 36 },
   resultRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, paddingVertical: 10, borderBottomWidth: 1 },
-  output: { borderWidth: 1, borderRadius: radius.sm, padding: spacing.md, minHeight: 80 },
-  statGrid: { flexDirection: 'row', flexWrap: 'wrap', borderTopWidth: 1 },
-  stat: { width: '50%', paddingVertical: 12, paddingRight: 12, gap: 4, borderBottomWidth: 1 },
-  notice: { borderLeftWidth: 3, borderRadius: radius.sm, padding: spacing.md },
+  output: { borderWidth: 1, borderRadius: radius.md, padding: spacing.md, minHeight: 80 },
+  statGrid: { flexDirection: 'row', flexWrap: 'wrap', borderWidth: 1, borderRadius: radius.lg, overflow: 'hidden' },
+  stat: { width: '50%', padding: 14, gap: 2, borderBottomWidth: 1, borderRightWidth: 1, marginBottom: -1, marginRight: -1 },
+  notice: { borderWidth: 1, borderRadius: radius.md, padding: spacing.md },
   row: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, alignItems: 'center' },
 });

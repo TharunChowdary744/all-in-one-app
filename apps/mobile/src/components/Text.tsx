@@ -17,13 +17,13 @@ export function Text({ style, ...props }: TextProps) {
   return <RNText {...props} style={[{ color: c.ink }, flat, { fontFamily, fontWeight: undefined }]} />;
 }
 
-/** Monospace uppercase catalog label. */
+/** Small supporting label (field labels, group titles). */
 export function Label({ style, ...props }: TextProps) {
   const c = useColors();
-  return <Text {...props} style={[{ fontFamily: fonts.monoMedium, fontSize: 11, letterSpacing: 0.9, textTransform: 'uppercase', color: c.muted }, style]} />;
+  return <Text {...props} style={[{ fontFamily: fonts.sansSemi, fontSize: 13, color: c.ink2 }, style]} />;
 }
 
 /** Display heading in Bricolage Grotesque. */
-export function Heading({ style, size = 28, ...props }: TextProps & { size?: number }) {
+export function Heading({ style, size = 26, ...props }: TextProps & { size?: number }) {
   return <Text {...props} style={[{ fontFamily: fonts.display, fontSize: size, lineHeight: size * 1.05, letterSpacing: -size * 0.03 }, style]} />;
 }
